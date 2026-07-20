@@ -23,14 +23,12 @@ export declare class World {
 	totalTime: number;
 	worldTime: number;
 	tick: number;
-	serverInterface: ServerInterface;
 	loadedEntityList: Entity[];
 	unloadedEntityList: Map<number, Entity>;
 	loadedTileEntitiesMap: BlockPosMap;
 	tileEntitiesToBeRemoved: unknown[];
 	chunkProvider: IChunkProvider;
 	ambientTickCountdown: number;
-	scheduledUpdatesAreImmediate: boolean;
 	leaderboards: Map<string, CPacketLeaderboard>;
 	enchantmentHelper: EnchantmentHelper;
 	difficulty: EnumDifficulty;
@@ -184,7 +182,6 @@ export declare class World {
 	forceBlockUpdateTick(block: Block, pos: BlockPos): void;
 	getRenderDistanceChunks(): void;
 	setActivePlayerChunksAndCheckLight(): void;
-	static doesBlockHaveSolidTopSurface(world: World, pos: BlockPos): boolean;
 	isBlockNormalCube(pos: BlockPos, idk: boolean): boolean;
 	getLightBrightness(_a: unknown): 15 | -15;
 	isBlockIndirectlyGettingPowered(facing: EnumFacing): number;
@@ -335,7 +332,6 @@ export declare class ClientWorld extends World {
 	removeEntity(entity: Entity): void;
 	onEntityRemoved(entity: Entity): void;
 	removeEntityFromWorld(entity: Entity): Entity;
-	removeAllEntities(): void;
 	isBlockLoaded(bp: BlockPos): boolean;
 	handleBlockUpdate(bpJSON: CPacketBlockUpdate): void;
 	getRenderDistanceChunks(): number;

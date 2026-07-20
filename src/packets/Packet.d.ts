@@ -83,6 +83,7 @@ export declare class Equipment extends Message<Equipment> {
 export declare class SPacketUpdateInventory extends Message<SPacketUpdateInventory> {
 	main: PBItemStack[];
 	armor: PBItemStack[];
+	offHand: PBItemStack[];
 	idkWhatThisIs: PBItemStack;
 }
 export declare class CPacketUpdateSign extends Message<CPacketUpdateSign> {

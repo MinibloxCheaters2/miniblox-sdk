@@ -11,43 +11,42 @@ import type { RayTraceResult } from "../world/rayTraceResult";
 export declare class PlayerControllerMP {
 	lastSentSlot: number;
 	isHittingBlock: boolean;
-
 	/** IMPORTANT: USE DUMPS */
 	syncItem(): void;
 	/** just returns {@link PlayerControllerMP.isHittingBlock isHittingBlock} */
 	func_181040_m(): this["isHittingBlock"];
 	sendEnchantPacket(windowId: string, button: number): void;
-	leftClick(): void;
-	rightClick(): void;
+	sendRenamePacket(windowId: string, name: string): void;
 }
 
 export declare class PlayerController {
-	prevBlock?: Vector3;
-	lastBreakSoundPlay: number;
-	/** this being an object with only one entry is literally just a waste of RAM :sob: */
 	key: {
-		/** set to Date.now() on click in some places,
-		 * and then to `0` in {@link PlayerController#leftClick} if `release` is true
-		 */
 		leftClick: number;
 	};
 	rightClick: boolean;
 	objectMouseOver: RayTraceResult;
 	rightClickDelayTimer: number;
 	currBreakingLocation: BlockPos | null;
+	lastBreakSoundPlay: number;
+	hoverKey: string;
+	lastHoverKeyAt: number;
+	leftClickInitial: boolean;
+	leftHeld: boolean;
+	rightClickInitial: boolean;
+	nextPredictedId: number;
+	weaponCooldown: number;
+	burstGap: number;
+	burstRemaining: number;
+	scopeHeartbeat: number;
+	scopeToggled: boolean;
 	reset(): void;
+	/** IMPORTANT: USE DUMPS */
 	getBlockReachDistance(): 5 | 4.5;
-	/**
-	 * Called when you left click the mouse.
-	 * If `release` (`u`) is truthy, it will set {@link PlayerController.key}.leftClick to `0`
-	 */
 	leftClick(release?: boolean): void;
-	/**
-	 * Calls {@link PlayerController.pickBlock} if `Game.isActive()` OR if `assumeActive` is truthy.
-	 * @param assumeActive assume the game is active
-	 */
+	/** IMPORTANT: USE DUMPS */
 	middleClick(assumeActive?: boolean): void;
 	rightClickMouse(): void;
+	/** IMPORTANT: USE DUMPS */
 	onPlayerRightClick(
 		e: EntityPlayer,
 		world: World,
@@ -56,15 +55,9 @@ export declare class PlayerController {
 		placeSide: EnumFacing,
 		hitVec: Vector3,
 	): boolean;
-	// TODO: item or item stack?
+	/** IMPORTANT: USE DUMPS */
 	sendUseItem(plr: EntityLivingBase, world: World, item: ItemStack): boolean;
-	/**
-	 * @param windowID the ID of the window to click in
-	 * @param slotID the slot to put the item in
-	 * @param button the mouse button that was clicked (i.e. 0 for left, 1 for right, and the slot number if using swap mode)
-	 * @param mode the click mode, it is recommended to use enum unless you need custom modes (i.e. for abusing bugs).
-	 * @param player
-	 */
+	/** IMPORTANT: USE DUMPS */
 	windowClick(
 		windowID: number,
 		slotID: number,
@@ -72,58 +65,38 @@ export declare class PlayerController {
 		mode: SlotActionType | number,
 		player: EntityPlayer,
 	): ItemStack;
-	/** @param entity the entity that was using the item */
 	onStoppedUsingItem(entity: EntityPlayer): void;
 	select(): void;
 	punch(): boolean | undefined;
-	/**
-	 * - Syncs the item slot using {@link PlayerControllerMP.syncItem}
-	 * - Sends a {@link SPacketUseEntity} packet with `action` = `1`, `id` = `e.id`,
-	 * and the `hitVec` is from the objectMouseOver hitVec.
-	 * - calls {@link EntityPlayer.attack player.attack} on the entity.
-	 * @param e the entity to attack.
-	 */
 	attackEntity(e: Entity): void;
+	/** IMPORTANT: USE DUMPS */
 	interactWithEntitySendPacket(_unusedPlayer: unknown, entity: Entity): boolean;
-
-	/**
-	 * Tries to find an item slot for the pick block function.
-	 * - It first tries to find a slot with an item that is equal to this stack.
-	 * - If none of the hotbar slots match, then it just finds an empty hotbar slot to put it in.
-	 * - If none are empty, it returns the current item slot.
-	 */
+	/** IMPORTANT: USE DUMPS */
 	findHotbarSlotForPickBlock(stack: PBItemStack): number;
 	getTargetedBlockCoords(): BlockPos;
 	getTargetedBlockState(): BlockState;
+	/** IMPORTANT: USE DUMPS */
 	getScreenLookVector(): Vector3;
+	/** IMPORTANT: USE DUMPS */
 	updateMouseOver(): void;
+	/** IMPORTANT: USE DUMPS */
 	pickBlock(): void;
-	/**
-	 * Mines the block selected from {@link PlayerController.objectMouseOver objectMouseOver} if LMB is down.
-	 * @param instantMine if the block selected should be instantly mined.
-	 */
 	mine(instantMine?: boolean): void;
-	/**
-	 * Drops the item in hand if:
-	 * - The {@link EntityPlayer.getHealth player's health} is > 0
-	 * - An {@link EntityPlayer.getActiveItemStack item} is selected (not falsy)
-	 * - And the {@link EntityPlayer.getActiveItemStack item} {@link ItemStack.stackSize stack size} is `> 0`
-	 *   (not `<= 0`)
-	 *
-	 * Then, it drops the item by sending a `SPacketPlayerAction` packet with
-	 * `action` = `all ? PBAction.DROP_ALL_ITEMS else PBAction.DROP_ITEM`,
-	 * `facing` = `EnumFacing.DOWN`, and then `position` = `BlockPos.ORIGIN.toProto()`
-	 * @param [all=false] drop the entire stack?
-	 */
-	dropItem(all: boolean = false): void;
-	/**
-	 * Updates the right click delay timer.
-	 */
+	dropItem(all?: boolean): void;
 	update(): void;
-	/**
-	 * - Updates {@link PlayerController.objectMouseOver objectMouseOver}
-	 * - {@link PlayerController.select Updates the selection box}
-	 * - {@link PlayerController.mine Mines} a block if selected and the left mouse button is down
-	 */
 	render(): void;
+	resolveUseHand(): number;
+	setHeldStack(stack: ItemStack): void;
+	swapOffhand(): void;
+	swingHand(): void;
+	tryFireWeapon(): void;
+	tryOpenSpectateMenu(): void;
+	updateWeaponFeel(): void;
+	predictShot(): void;
+	getSpawnEggForEntity(entity: Entity): ItemStack;
+	giveHotbarItem(item: ItemStack): void;
+	hasRightClickUse(): boolean;
+	fireRound(): void;
+	heldWeapon(): unknown;
+	countCarried(): number;
 }

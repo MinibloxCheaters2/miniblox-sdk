@@ -3,15 +3,49 @@ import type { Entity } from "../entities";
 import type { EnumFacing } from "../math/facing";
 import type { World } from "../world";
 
-// Base Item class
 export class Item {
 	name: string;
+	displayName: string;
+	id: number;
 	maxStackSize: number;
-	maxDamage: number;
+	maxDurability: number;
 	hasSubtypes: boolean;
+	itemModifierUUID: string;
 
-	getUnlocalizedName(): string;
-	getItemStackDisplayName(stack: ItemStack): string;
+	getDisplayName(): string;
+	getTextureName(side?: unknown): string;
+	getItemStackLimit(): number;
+	getMaxDamage(): number;
+	getItemEnchantability(): number;
+	getAttackReach(): number;
+	getAttackCooldownTicks(): number;
+	getMinAttackDistance(): number;
+	getStrVsBlock(stack: ItemStack, block: Block): number;
+	getItemUseAction(stack: ItemStack): string;
+	getMaxItemUseDuration(stack: ItemStack): number;
+	getRenderLayers(): unknown;
+	getWeaponConfig(): unknown;
+	getPotionEffect(): unknown;
+	getSubItems(tab: unknown, items: unknown): unknown[];
+	getContainerItem(): Item | null;
+	heldDisplaySize(): number;
+
+	hasRightClick(): boolean;
+	hasEffect(stack: ItemStack): boolean;
+	hasEntityInteraction(): boolean;
+	isDamageable(): boolean;
+	isItemBlock(): boolean;
+	isItemTool(): boolean;
+	isSpear(): boolean;
+	isMace(): boolean;
+	isFishingRod(): boolean;
+	isWings(): boolean;
+	isTotem(): boolean;
+	isPotionIngredient(): boolean;
+	showInCreativeMenu(): boolean;
+	canHarvestBlock(block: Block): boolean;
+	equals(other: Item): boolean;
+
 	onItemUse(
 		stack: ItemStack,
 		player: Entity,
@@ -23,8 +57,7 @@ export class Item {
 		hitZ: number,
 	): boolean;
 	onItemRightClick(stack: ItemStack, world: World, player: Entity): ItemStack;
-	getMaxItemUseDuration(stack: ItemStack): number;
-	getItemUseAction(stack: ItemStack): string;
+	onItemUseFinish(stack: ItemStack, world: World, player: Entity): ItemStack;
 	onPlayerStoppedUsing(
 		stack: ItemStack,
 		world: World,
@@ -39,15 +72,31 @@ export class Item {
 		pos: Vector3,
 		player: Entity,
 	): boolean;
-	canHarvestBlock(block: Block): boolean;
-	getStrVsBlock(stack: ItemStack, block: Block): number;
+	itemInteractionForEntity(
+		stack: ItemStack,
+		player: Entity,
+		target: Entity,
+	): boolean;
+	repairWith(other: Item): boolean;
+	setHasSubtypes(has: boolean): void;
+	setMaxDamage(damage: number): void;
+	setPotionEffect(effect: string): void;
+	setPotionEffect2(effect: string): void;
+	setPotionEffectIngredient(effect: string): void;
+	setContainerItem(item: Item): void;
+	updateItemStackNBT(nbt: unknown): void;
 }
 
-// ItemBlock - Placeable blocks
 export class ItemBlock extends Item {
 	block: Block;
-	getBlock(): Block;
-	placeBlockAt(
+	canPlaceBlockOnSide(
+		world: World,
+		pos: Vector3,
+		side: EnumFacing,
+		player: Entity,
+		stack: ItemStack,
+	): boolean;
+	onItemUse(
 		stack: ItemStack,
 		player: Entity,
 		world: World,
@@ -56,58 +105,105 @@ export class ItemBlock extends Item {
 		hitX: number,
 		hitY: number,
 		hitZ: number,
-		metadata: number,
 	): boolean;
-}
-
-// ItemSword - Swords
-export class ItemSword extends Item {
-	attackDamage: number;
-	weaponMaterial: string;
-	getAttackDamage(): number;
-}
-
-// ItemBow - Bows
-export class ItemBow extends Item {
-	maxItemUseDuration: number;
-}
-
-export class ItemArmor extends Item {
-	armorType: number;
-	/** **IMPORTANT**: USE DUMPS OR AUTO REMAP PROXY */
-	damageReduceAmount: number;
-	maxDamage: number;
-	renderIndex: number;
-	material: string;
-
-	getArmorMaterial(): string;
-	getColor(stack: ItemStack): number;
-	removeColor(stack: ItemStack): void;
-	hasColor(stack: ItemStack): boolean;
-}
-
-export class ItemFood extends Item {
-	healAmount: number;
-	saturationModifier: number;
-	isWolfsFavoriteMeat: boolean;
-	alwaysEdible: boolean;
-
-	getHealAmount(stack: ItemStack): number;
-	getSaturationModifier(stack: ItemStack): number;
 }
 
 export class ItemTool extends Item {
 	efficiencyOnProperMaterial: number;
 	damageVsEntity: number;
-	toolMaterial: string;
-
-	getToolMaterial(): string;
+	toolMaterial: unknown;
+	effectiveBlocks: Set<Block>;
 	getStrVsBlock(stack: ItemStack, block: Block): number;
 }
 
-export class ItemPickaxe extends ItemTool {}
+export class ItemPickaxe extends ItemTool {
+	ironLevel: unknown[];
+	stoneLevel: unknown[];
+}
 
-export class ItemAppleGold extends ItemFood {}
+export class ItemShovel extends ItemTool {
+	blockConversions: Record<number, unknown>;
+}
+
+export class ItemHoe extends Item {
+	material: unknown;
+	blockConversions: Record<number, unknown>;
+	isFull3D(): boolean;
+	getMaterialName(): string;
+}
+
+export class ItemSword extends Item {
+	attackDamage: number;
+	material: unknown;
+}
+
+export class ItemSpear extends ItemSword {
+	jabCooldownTicks: number;
+	chargeTireTicks: number;
+	chargeDisengageTicks: number;
+	chargeStage: number;
+}
+
+export class ItemMace extends ItemSword {
+	attackDamage: number;
+	material: unknown;
+}
+
+export class ItemBow extends Item {
+	static BOW_TEXTURES: string[];
+}
+
+export class ItemFood extends Item {
+	healAmount: number;
+	saturationModifier: number;
+	itemUseDuration: number;
+
+	getHealAmount(stack: ItemStack): number;
+	getSaturationModifier(stack: ItemStack): number;
+	setAlwaysEdible(): void;
+	onFoodEaten(stack: ItemStack, world: World, player: Entity): void;
+}
+
+export class ItemAppleGold extends ItemFood {
+	alwaysEdible: boolean;
+	potionId: number;
+	potionDuration: number;
+	potionAmplifier: number;
+	potionEffectProbability: number;
+}
+
+export class ItemSeedFood extends ItemFood {
+	crops: unknown;
+	soilId: unknown;
+}
+
+export class ItemArmor extends Item {
+	armorType: number;
+	renderIndex: number;
+	material: unknown;
+	toughness: number;
+
+	getArmorMaterial(): string;
+}
+
+export class ItemThrowable extends Item {
+	requiresAlive(): boolean;
+	getClientSoundPitch(): number;
+	spawnProjectile(world: World, player: Entity): unknown;
+}
+
+export class ItemBucket extends Item {
+	liquid: unknown;
+}
+
+export class ItemSpawnEgg extends Item {
+	mobName: string;
+	primaryColor: number;
+	secondaryColor: number;
+
+	spawnMob(world: World, pos: Vector3): unknown;
+	registryEntry(): unknown;
+}
 
 export interface EnchantmentData {
 	id: number;
@@ -122,15 +218,25 @@ export class ItemStack {
 
 	getItem(): Item;
 	getDisplayName(): string;
+	getTextureName(): string;
 	getEnchantmentTagList(): EnchantmentData[] | null;
+	getLore(): string[];
+	getChatComponent(): unknown;
+	getMetadata(): number;
+	getRepairCost(): number;
+	getSubCompound(key: string): unknown;
 	hasEffect(): boolean;
 	isItemEnchanted(): boolean;
 	isItemEnchantable(): boolean;
+	isItemStackDamageable(): boolean;
+	isOnItemFrame(): boolean;
+	setItemFrame(frame: unknown): void;
 	getMaxStackSize(): number;
 	isStackable(): boolean;
 	isItemDamaged(): boolean;
 	getItemDamage(): number;
 	getMaxDamage(): number;
+	setItemDamage(damage: number): void;
 	attemptDamageItem(amount: number, random: unknown): boolean;
 	damageItem(amount: number, entity: Entity): void;
 	hitEntity(target: Entity, player: Entity): void;
@@ -142,613 +248,218 @@ export class ItemStack {
 	): void;
 	canHarvestBlock(block: Block): boolean;
 	interactWithEntity(player: Entity, target: Entity): boolean;
+	addEnchantment(enchantment: unknown): void;
+	clearEnchantments(): void;
+	setEnchantment(id: number, level: number): void;
 	clone(): ItemStack;
 	areItemStackTagsEqual(other: ItemStack): boolean;
 	areItemStacksEqual(other: ItemStack): boolean;
 	isItemEqual(other: ItemStack): boolean;
+	isItemStackEqual(other: ItemStack): boolean;
+	equals(other: ItemStack): boolean;
 	getTooltip(player: Entity, advanced: boolean): string[];
 	hasDisplayName(): boolean;
+	setDisplayName(name: string): void;
 	setStackDisplayName(name: string): ItemStack;
+	setLore(lore: string[]): void;
 	clearCustomName(): void;
 	hasTagCompound(): boolean;
-	// TODO: idk what types these are, assuming strings?
-	getTagCompound(): string;
-	setTagCompound(nbt: string): void;
+	getTagCompound(): unknown;
+	setTagCompound(nbt: unknown): void;
+	setTagInfo(key: string, value: unknown): void;
+	getAttributeModifiers(): unknown;
 	splitStack(by: number): ItemStack;
+	setStackSize(size: number): void;
+	onCrafting(world: World, player: Entity): void;
+	onItemUse(
+		stack: ItemStack,
+		player: Entity,
+		world: World,
+		pos: Vector3,
+		side: EnumFacing,
+		hitX: number,
+		hitY: number,
+		hitZ: number,
+	): boolean;
+	onItemUseFinish(stack: ItemStack, world: World, player: Entity): ItemStack;
+	onPlayerStoppedUsing(
+		stack: ItemStack,
+		world: World,
+		player: Entity,
+		timeLeft: number,
+	): void;
+	useItemRightClick(world: World, player: Entity): ItemStack;
+	toJSON(): unknown;
+	toNBT(nbt: unknown): unknown;
+	toProto(): unknown;
+	writeToNBT(nbt: unknown): unknown;
 }
 
 // Global Items registry
 export declare const Items: {
-	readonly emerald_sword: Item;
-	readonly diamond_sword: ItemSword;
-	readonly iron_sword: ItemSword;
-	readonly stone_sword: ItemSword;
 	readonly wooden_sword: ItemSword;
+	readonly stone_sword: ItemSword;
+	readonly iron_sword: ItemSword;
+	readonly golden_sword: ItemSword;
+	readonly diamond_sword: ItemSword;
+	readonly emerald_sword: ItemSword;
+	readonly infernium_sword: ItemSword;
+	readonly wooden_pickaxe: ItemPickaxe;
+	readonly stone_pickaxe: ItemPickaxe;
+	readonly iron_pickaxe: ItemPickaxe;
+	readonly golden_pickaxe: ItemPickaxe;
+	readonly diamond_pickaxe: ItemPickaxe;
+	readonly emerald_pickaxe: ItemPickaxe;
+	readonly infernium_pickaxe: ItemPickaxe;
+	readonly wooden_axe: ItemTool;
+	readonly stone_axe: ItemTool;
+	readonly iron_axe: ItemTool;
+	readonly golden_axe: ItemTool;
+	readonly diamond_axe: ItemTool;
+	readonly emerald_axe: ItemTool;
+	readonly infernium_axe: ItemTool;
+	readonly wood_shovel: ItemShovel;
+	readonly stone_shovel: ItemShovel;
+	readonly iron_shovel: ItemShovel;
+	readonly golden_shovel: ItemShovel;
+	readonly diamond_shovel: ItemShovel;
+	readonly emerald_shovel: ItemShovel;
+	readonly wooden_hoe: ItemHoe;
+	readonly stone_hoe: ItemHoe;
+	readonly iron_hoe: ItemHoe;
+	readonly golden_hoe: ItemHoe;
+	readonly diamond_hoe: ItemHoe;
+	readonly emerald_hoe: ItemHoe;
+	readonly wooden_spear: ItemSpear;
+	readonly stone_spear: ItemSpear;
+	readonly iron_spear: ItemSpear;
+	readonly golden_spear: ItemSpear;
+	readonly diamond_spear: ItemSpear;
+	readonly infernium_spear: ItemSpear;
+	readonly mace: ItemMace;
 	readonly bow: ItemBow;
 	readonly arrow: Item;
-	readonly golden_apple: ItemAppleGold;
-	readonly apple: ItemFood;
-	readonly bread: ItemFood;
-	readonly cooked_beef: ItemFood;
-	readonly cooked_porkchop: ItemFood;
-	readonly diamond_helmet: ItemArmor;
-	readonly diamond_chestplate: ItemArmor;
-	readonly diamond_leggings: ItemArmor;
-	readonly diamond_boots: ItemArmor;
-	readonly iron_helmet: ItemArmor;
-	readonly iron_chestplate: ItemArmor;
-	readonly iron_leggings: ItemArmor;
-	readonly iron_boots: ItemArmor;
+	readonly tipped_arrow: Item;
+	readonly spectral_arrow: Item;
+	readonly leather_helmet: ItemArmor;
+	readonly leather_chestplate: ItemArmor;
+	readonly leather_leggings: ItemArmor;
+	readonly leather_boots: ItemArmor;
 	readonly chainmail_helmet: ItemArmor;
 	readonly chainmail_chestplate: ItemArmor;
 	readonly chainmail_leggings: ItemArmor;
 	readonly chainmail_boots: ItemArmor;
-	readonly diamond_pickaxe: ItemPickaxe;
-	readonly iron_pickaxe: ItemPickaxe;
-	readonly stone_pickaxe: ItemPickaxe;
-	readonly wooden_pickaxe: ItemPickaxe;
-	readonly ender_pearl: Item;
-	readonly snowball: Item;
-	readonly egg: Item;
+	readonly iron_helmet: ItemArmor;
+	readonly iron_chestplate: ItemArmor;
+	readonly iron_leggings: ItemArmor;
+	readonly iron_boots: ItemArmor;
+	readonly golden_helmet: ItemArmor;
+	readonly golden_chestplate: ItemArmor;
+	readonly golden_leggings: ItemArmor;
+	readonly golden_boots: ItemArmor;
+	readonly diamond_helmet: ItemArmor;
+	readonly diamond_chestplate: ItemArmor;
+	readonly diamond_leggings: ItemArmor;
+	readonly diamond_boots: ItemArmor;
+	readonly emerald_helmet: ItemArmor;
+	readonly emerald_chestplate: ItemArmor;
+	readonly emerald_leggings: ItemArmor;
+	readonly emerald_boots: ItemArmor;
+	readonly infernium_helmet: ItemArmor;
+	readonly infernium_chestplate: ItemArmor;
+	readonly infernium_leggings: ItemArmor;
+	readonly infernium_boots: ItemArmor;
+	readonly elytra: Item;
+	readonly apple: ItemFood;
+	readonly golden_apple: ItemAppleGold;
+	readonly enchanted_golden_apple: ItemAppleGold;
+	readonly bread: ItemFood;
+	readonly beef: ItemFood;
+	readonly cooked_beef: ItemFood;
+	readonly porkchop: ItemFood;
+	readonly cooked_porkchop: ItemFood;
+	readonly chicken: ItemFood;
+	readonly cooked_chicken: ItemFood;
+	readonly cod: ItemFood;
+	readonly cooked_cod: ItemFood;
+	readonly salmon: ItemFood;
+	readonly cooked_salmon: ItemFood;
+	readonly mutton: ItemFood;
+	readonly cooked_mutton: ItemFood;
+	readonly rabbit: ItemFood;
+	readonly cooked_rabbit: ItemFood;
+	readonly rabbit_stew: ItemFood;
+	readonly carrot: ItemSeedFood;
+	readonly golden_carrot: ItemFood;
+	readonly potato: ItemSeedFood;
+	readonly baked_potato: ItemFood;
+	readonly poisonous_potato: ItemFood;
+	readonly beetroot: ItemFood;
+	readonly beetroot_soup: ItemFood;
+	readonly mushroom_stew: ItemFood;
+	readonly cookie: ItemFood;
+	readonly melon_slice: ItemFood;
+	readonly dried_kelp: ItemFood;
+	readonly pumpkin_pie: ItemFood;
+	readonly rotten_flesh: ItemFood;
+	readonly spider_eye: ItemFood;
+	readonly pufferfish: ItemFood;
+	readonly tropical_fish: ItemFood;
+	readonly honey_bottle: ItemFood;
+	readonly orange: ItemFood;
+	readonly banana: ItemFood;
+	readonly ender_pearl: ItemThrowable;
+	readonly snowball: ItemThrowable;
+	readonly egg: ItemThrowable;
+	readonly experience_bottle: ItemThrowable;
+	readonly firework_rocket: Item;
 	readonly flint_and_steel: Item;
-	readonly fire_charge: Item;
-	readonly stone: Item;
-	readonly granite: Item;
-	readonly polished_granite: Item;
-	readonly diorite: Item;
-	readonly polished_diorite: Item;
-	readonly andesite: Item;
-	readonly polished_andesite: Item;
-	readonly grass_block: Item;
-	readonly dirt: Item;
-	readonly coarse_dirt: Item;
-	readonly podzol: Item;
-	readonly dirt_path: Item;
-	readonly cobblestone: Item;
-	readonly oak_planks: Item;
-	readonly spruce_planks: Item;
-	readonly birch_planks: Item;
-	readonly jungle_planks: Item;
-	readonly acacia_planks: Item;
-	readonly dark_oak_planks: Item;
-	readonly oak_sapling: Item;
-	readonly spruce_sapling: Item;
-	readonly birch_sapling: Item;
-	readonly jungle_sapling: Item;
-	readonly acacia_sapling: Item;
-	readonly dark_oak_sapling: Item;
-	readonly bedrock: Item;
-	readonly sand: Item;
-	readonly red_sand: Item;
-	readonly gravel: Item;
-	readonly gold_ore: Item;
-	readonly iron_ore: Item;
-	readonly coal_ore: Item;
-	readonly diamond_ore: Item;
-	readonly emerald_ore: Item;
-	readonly lapis_ore: Item;
-	readonly redstone_ore: Item;
-	readonly hell_marble_ore: Item;
-	readonly infernium_ore: Item;
-	readonly oak_log: Item;
-	readonly spruce_log: Item;
-	readonly birch_log: Item;
-	readonly jungle_log: Item;
-	readonly acacia_log: Item;
-	readonly dark_oak_log: Item;
-	readonly stripped_oak_log: Item;
-	readonly stripped_spruce_log: Item;
-	readonly stripped_birch_log: Item;
-	readonly stripped_jungle_log: Item;
-	readonly stripped_acacia_log: Item;
-	readonly stripped_dark_oak_log: Item;
-	readonly stripped_oak_wood: Item;
-	readonly stripped_spruce_wood: Item;
-	readonly stripped_birch_wood: Item;
-	readonly stripped_jungle_wood: Item;
-	readonly stripped_acacia_wood: Item;
-	readonly stripped_dark_oak_wood: Item;
-	readonly oak_wood: Item;
-	readonly spruce_wood: Item;
-	readonly birch_wood: Item;
-	readonly jungle_wood: Item;
-	readonly acacia_wood: Item;
-	readonly dark_oak_wood: Item;
-	readonly oak_leaves: Item;
-	readonly spruce_leaves: Item;
-	readonly birch_leaves: Item;
-	readonly jungle_leaves: Item;
-	readonly acacia_leaves: Item;
-	readonly dark_oak_leaves: Item;
-	readonly sponge: Item;
-	readonly glass: Item;
-	readonly white_stained_glass: Item;
-	readonly orange_stained_glass: Item;
-	readonly magenta_stained_glass: Item;
-	readonly light_blue_stained_glass: Item;
-	readonly yellow_stained_glass: Item;
-	readonly lime_stained_glass: Item;
-	readonly pink_stained_glass: Item;
-	readonly gray_stained_glass: Item;
-	readonly light_gray_stained_glass: Item;
-	readonly cyan_stained_glass: Item;
-	readonly purple_stained_glass: Item;
-	readonly blue_stained_glass: Item;
-	readonly brown_stained_glass: Item;
-	readonly green_stained_glass: Item;
-	readonly red_stained_glass: Item;
-	readonly black_stained_glass: Item;
-	readonly coal_block: Item;
-	readonly iron_block: Item;
-	readonly gold_block: Item;
-	readonly diamond_block: Item;
-	readonly emerald_block: Item;
-	readonly infernium_block: Item;
-	readonly lapis_block: Item;
-	readonly redstone_block: Item;
-	readonly marble_block: Item;
-	readonly marble_pillar: Item;
-	readonly chiseled_marble_block: Item;
-	readonly smooth_marble: Item;
-	readonly sandstone: Item;
-	readonly chiseled_sandstone: Item;
-	readonly smooth_sandstone: Item;
-	readonly cut_sandstone: Item;
-	readonly red_sandstone: Item;
-	readonly chiseled_red_sandstone: Item;
-	readonly smooth_red_sandstone: Item;
-	readonly cut_red_sandstone: Item;
-	readonly note_block: Item;
-	readonly bookshelf: Item;
-	readonly workbench: Item;
-	readonly bricks: Item;
-	readonly tnt: Item;
-	readonly mossy_cobblestone: Item;
-	readonly obsidian: Item;
-	readonly cake: Item;
-	readonly cobweb: Item;
-	readonly furnace: Item;
-	readonly grass: Item;
-	readonly dead_bush: Item;
-	readonly fern: Item;
-	readonly white_wool: Item;
-	readonly orange_wool: Item;
-	readonly magenta_wool: Item;
-	readonly light_blue_wool: Item;
-	readonly yellow_wool: Item;
-	readonly lime_wool: Item;
-	readonly pink_wool: Item;
-	readonly gray_wool: Item;
-	readonly light_gray_wool: Item;
-	readonly cyan_wool: Item;
-	readonly purple_wool: Item;
-	readonly blue_wool: Item;
-	readonly brown_wool: Item;
-	readonly green_wool: Item;
-	readonly red_wool: Item;
-	readonly black_wool: Item;
-	readonly poppy: Item;
-	readonly dandelion: Item;
-	readonly blue_orchid: Item;
-	readonly allium: Item;
-	readonly azure_bluet: Item;
-	readonly red_tulip: Item;
-	readonly orange_tulip: Item;
-	readonly white_tulip: Item;
-	readonly pink_tulip: Item;
-	readonly oxeye_daisy: Item;
-	readonly red_mushroom: Item;
-	readonly brown_mushroom: Item;
-	readonly ice: Item;
-	readonly packed_ice: Item;
-	readonly snow_block: Item;
-	readonly clay: Item;
-	readonly jukebox: Item;
-	readonly pumpkin: Item;
-	readonly carved_pumpkin: Item;
-	readonly jack_o_lantern: Item;
-	readonly hellstone: Item;
-	readonly soul_sand: Item;
-	readonly glowstone: Item;
-	readonly melon: Item;
-	readonly slime_block: Item;
-	readonly hay_block: Item;
-	readonly terracotta: Item;
-	readonly white_terracotta: Item;
-	readonly orange_terracotta: Item;
-	readonly magenta_terracotta: Item;
-	readonly light_blue_terracotta: Item;
-	readonly yellow_terracotta: Item;
-	readonly lime_terracotta: Item;
-	readonly pink_terracotta: Item;
-	readonly gray_terracotta: Item;
-	readonly light_gray_terracotta: Item;
-	readonly cyan_terracotta: Item;
-	readonly purple_terracotta: Item;
-	readonly blue_terracotta: Item;
-	readonly brown_terracotta: Item;
-	readonly green_terracotta: Item;
-	readonly red_terracotta: Item;
-	readonly black_terracotta: Item;
-	readonly white_concrete: Item;
-	readonly orange_concrete: Item;
-	readonly magenta_concrete: Item;
-	readonly light_blue_concrete: Item;
-	readonly yellow_concrete: Item;
-	readonly lime_concrete: Item;
-	readonly pink_concrete: Item;
-	readonly gray_concrete: Item;
-	readonly light_gray_concrete: Item;
-	readonly cyan_concrete: Item;
-	readonly purple_concrete: Item;
-	readonly blue_concrete: Item;
-	readonly brown_concrete: Item;
-	readonly green_concrete: Item;
-	readonly red_concrete: Item;
-	readonly black_concrete: Item;
-	readonly stone_bricks: Item;
-	readonly smooth_stone: Item;
-	readonly mossy_stone_bricks: Item;
-	readonly cracked_stone_bricks: Item;
-	readonly chiseled_stone_bricks: Item;
-	readonly brown_mushroom_block: Item;
-	readonly red_mushroom_block: Item;
-	readonly mushroom_stem: Item;
-	readonly hell_bricks: Item;
-	readonly hell_fungus_block: Item;
-	readonly red_hell_bricks: Item;
-	readonly chiseled_hell_bricks: Item;
-	readonly cracked_hell_bricks: Item;
-	readonly marble_bricks: Item;
-	readonly aquastone: Item;
-	readonly aquastone_bricks: Item;
-	readonly dark_aquastone: Item;
-	readonly end_stone: Item;
-	readonly end_stone_bricks: Item;
-	readonly oak_stairs: Item;
-	readonly spruce_stairs: Item;
-	readonly birch_stairs: Item;
-	readonly jungle_stairs: Item;
-	readonly acacia_stairs: Item;
-	readonly dark_oak_stairs: Item;
-	readonly stone_stairs: Item;
-	readonly cobblestone_stairs: Item;
-	readonly brick_stairs: Item;
-	readonly stone_brick_stairs: Item;
-	readonly hell_brick_stairs: Item;
-	readonly sandstone_stairs: Item;
-	readonly smooth_sandstone_stairs: Item;
-	readonly red_sandstone_stairs: Item;
-	readonly smooth_red_sandstone_stairs: Item;
-	readonly marble_stairs: Item;
-	readonly smooth_marble_stairs: Item;
-	readonly andesite_stairs: Item;
-	readonly diorite_stairs: Item;
-	readonly granite_stairs: Item;
-	readonly polished_andesite_stairs: Item;
-	readonly polished_diorite_stairs: Item;
-	readonly polished_granite_stairs: Item;
-	readonly end_stone_brick_stairs: Item;
-	readonly aquastone_stairs: Item;
-	readonly aquastone_brick_stairs: Item;
-	readonly dark_aquastone_stairs: Item;
-	readonly mossy_cobblestone_stairs: Item;
-	readonly mossy_stone_brick_stairs: Item;
-	readonly purpur_stairs: Item;
-	readonly red_hell_brick_stairs: Item;
-	readonly blackstone_stairs: Item;
-	readonly polished_blackstone_stairs: Item;
-	readonly polished_blackstone_brick_stairs: Item;
-	readonly crimson_stairs: Item;
-	readonly warped_stairs: Item;
-	readonly cactus: Item;
-	readonly ladder: Item;
-	readonly iron_ladder: Item;
-	readonly vine: Item;
-	readonly sea_lantern: Item;
-	readonly command_block: Item;
-	readonly white_carpet: Item;
-	readonly orange_carpet: Item;
-	readonly magenta_carpet: Item;
-	readonly light_blue_carpet: Item;
-	readonly yellow_carpet: Item;
-	readonly lime_carpet: Item;
-	readonly pink_carpet: Item;
-	readonly gray_carpet: Item;
-	readonly light_gray_carpet: Item;
-	readonly cyan_carpet: Item;
-	readonly purple_carpet: Item;
-	readonly blue_carpet: Item;
-	readonly brown_carpet: Item;
-	readonly green_carpet: Item;
-	readonly red_carpet: Item;
-	readonly black_carpet: Item;
-	readonly muck: Item;
-	readonly snow: Item;
-	readonly enchanting_table: Item;
-	readonly chest: Item;
-	readonly ender_chest: Item;
-	readonly barrel: Item;
-	readonly sticky_piston: Item;
-	readonly piston: Item;
-	readonly barrier: Item;
-	readonly lever: Item;
-	readonly stone_button: Item;
-	readonly oak_button: Item;
-	readonly spruce_button: Item;
-	readonly birch_button: Item;
-	readonly jungle_button: Item;
-	readonly acacia_button: Item;
-	readonly dark_oak_button: Item;
-	readonly crimson_button: Item;
-	readonly warped_button: Item;
-	readonly polished_blackstone_button: Item;
-	readonly repeater: Item;
-	readonly comparator: Item;
-	readonly redstone_lamp: Item;
-	readonly observer: Item;
-	readonly target: Item;
-	readonly stone_pressure_plate: Item;
-	readonly oak_pressure_plate: Item;
-	readonly spruce_pressure_plate: Item;
-	readonly birch_pressure_plate: Item;
-	readonly jungle_pressure_plate: Item;
-	readonly acacia_pressure_plate: Item;
-	readonly dark_oak_pressure_plate: Item;
-	readonly crimson_pressure_plate: Item;
-	readonly warped_pressure_plate: Item;
-	readonly polished_blackstone_pressure_plate: Item;
-	readonly light_weighted_pressure_plate: Item;
-	readonly heavy_weighted_pressure_plate: Item;
-	readonly oak_fence: Item;
-	readonly spruce_fence: Item;
-	readonly birch_fence: Item;
-	readonly jungle_fence: Item;
-	readonly acacia_fence: Item;
-	readonly dark_oak_fence: Item;
-	readonly hell_brick_fence: Item;
-	readonly crimson_fence: Item;
-	readonly warped_fence: Item;
-	readonly oak_fence_gate: Item;
-	readonly spruce_fence_gate: Item;
-	readonly birch_fence_gate: Item;
-	readonly jungle_fence_gate: Item;
-	readonly acacia_fence_gate: Item;
-	readonly dark_oak_fence_gate: Item;
-	readonly crimson_fence_gate: Item;
-	readonly warped_fence_gate: Item;
-	readonly andesite_wall: Item;
-	readonly blackstone_wall: Item;
-	readonly polished_blackstone_wall: Item;
-	readonly polished_blackstone_brick_wall: Item;
-	readonly brick_wall: Item;
-	readonly cobblestone_wall: Item;
-	readonly diorite_wall: Item;
-	readonly end_stone_brick_wall: Item;
-	readonly granite_wall: Item;
-	readonly mossy_cobblestone_wall: Item;
-	readonly mossy_stone_brick_wall: Item;
-	readonly hell_brick_wall: Item;
-	readonly red_hell_brick_wall: Item;
-	readonly sandstone_wall: Item;
-	readonly stone_brick_wall: Item;
-	readonly red_sandstone_wall: Item;
-	readonly aquastone_wall: Item;
-	readonly iron_bars: Item;
-	readonly glass_pane: Item;
-	readonly white_stained_glass_pane: Item;
-	readonly orange_stained_glass_pane: Item;
-	readonly magenta_stained_glass_pane: Item;
-	readonly light_blue_stained_glass_pane: Item;
-	readonly yellow_stained_glass_pane: Item;
-	readonly lime_stained_glass_pane: Item;
-	readonly pink_stained_glass_pane: Item;
-	readonly gray_stained_glass_pane: Item;
-	readonly light_gray_stained_glass_pane: Item;
-	readonly cyan_stained_glass_pane: Item;
-	readonly purple_stained_glass_pane: Item;
-	readonly blue_stained_glass_pane: Item;
-	readonly brown_stained_glass_pane: Item;
-	readonly green_stained_glass_pane: Item;
-	readonly red_stained_glass_pane: Item;
-	readonly black_stained_glass_pane: Item;
-	readonly brewing_stand: Item;
-	readonly cauldron: Item;
-	readonly oak_trapdoor: Item;
-	readonly spruce_trapdoor: Item;
-	readonly birch_trapdoor: Item;
-	readonly jungle_trapdoor: Item;
-	readonly acacia_trapdoor: Item;
-	readonly dark_oak_trapdoor: Item;
-	readonly iron_trapdoor: Item;
-	readonly dragon_egg: Item;
-	readonly anvil: Item;
-	readonly dispenser: Item;
-	readonly dropper: Item;
-	readonly hopper: Item;
-	readonly white_bed: Item;
-	readonly orange_bed: Item;
-	readonly magenta_bed: Item;
-	readonly light_blue_bed: Item;
-	readonly yellow_bed: Item;
-	readonly lime_bed: Item;
-	readonly pink_bed: Item;
-	readonly gray_bed: Item;
-	readonly light_gray_bed: Item;
-	readonly cyan_bed: Item;
-	readonly purple_bed: Item;
-	readonly blue_bed: Item;
-	readonly brown_bed: Item;
-	readonly green_bed: Item;
-	readonly red_bed: Item;
-	readonly black_bed: Item;
-	readonly sugar_cane: Item;
-	readonly bone_block: Item;
-	readonly cloud_block: Item;
-	readonly blackstone: Item;
-	readonly polished_blackstone: Item;
-	readonly polished_blackstone_bricks: Item;
-	readonly cracked_polished_blackstone_bricks: Item;
-	readonly chiseled_polished_blackstone: Item;
-	readonly gilded_blackstone: Item;
-	readonly basalt: Item;
-	readonly polished_basalt: Item;
-	readonly soul_soil: Item;
-	readonly crying_obsidian: Item;
-	readonly magma_block: Item;
-	readonly campfire: Item;
-	readonly soul_campfire: Item;
-	readonly lantern: Item;
-	readonly soul_lantern: Item;
-	readonly shroomlight: Item;
-	readonly lodestone: Item;
-	readonly hell_gold_ore: Item;
-	readonly crimson_stem: Item;
-	readonly warped_stem: Item;
-	readonly stripped_crimson_stem: Item;
-	readonly stripped_warped_stem: Item;
-	readonly crimson_hyphae: Item;
-	readonly warped_hyphae: Item;
-	readonly stripped_crimson_hyphae: Item;
-	readonly stripped_warped_hyphae: Item;
-	readonly crimson_planks: Item;
-	readonly warped_planks: Item;
-	readonly crimson_nylium: Item;
-	readonly warped_nylium: Item;
-	readonly warped_wart_block: Item;
-	readonly crimson_fungus: Item;
-	readonly warped_fungus: Item;
-	readonly crimson_roots: Item;
-	readonly warped_roots: Item;
-	readonly hell_sprouts: Item;
-	readonly crimson_trapdoor: Item;
-	readonly warped_trapdoor: Item;
-	readonly purpur_block: Item;
-	readonly purpur_pillar: Item;
-	readonly meteorite_block: Item;
-	readonly wet_sponge: Item;
-	readonly honeycomb_block: Item;
-	readonly honey_block: Item;
-	readonly blue_ice: Item;
-	readonly white_glazed_terracotta: Item;
-	readonly orange_glazed_terracotta: Item;
-	readonly magenta_glazed_terracotta: Item;
-	readonly light_blue_glazed_terracotta: Item;
-	readonly yellow_glazed_terracotta: Item;
-	readonly lime_glazed_terracotta: Item;
-	readonly pink_glazed_terracotta: Item;
-	readonly gray_glazed_terracotta: Item;
-	readonly light_gray_glazed_terracotta: Item;
-	readonly cyan_glazed_terracotta: Item;
-	readonly purple_glazed_terracotta: Item;
-	readonly blue_glazed_terracotta: Item;
-	readonly brown_glazed_terracotta: Item;
-	readonly green_glazed_terracotta: Item;
-	readonly red_glazed_terracotta: Item;
-	readonly black_glazed_terracotta: Item;
-	readonly white_concrete_powder: Item;
-	readonly orange_concrete_powder: Item;
-	readonly magenta_concrete_powder: Item;
-	readonly light_blue_concrete_powder: Item;
-	readonly yellow_concrete_powder: Item;
-	readonly lime_concrete_powder: Item;
-	readonly pink_concrete_powder: Item;
-	readonly gray_concrete_powder: Item;
-	readonly light_gray_concrete_powder: Item;
-	readonly cyan_concrete_powder: Item;
-	readonly purple_concrete_powder: Item;
-	readonly blue_concrete_powder: Item;
-	readonly brown_concrete_powder: Item;
-	readonly green_concrete_powder: Item;
-	readonly red_concrete_powder: Item;
-	readonly black_concrete_powder: Item;
-	readonly cornflower: Item;
-	readonly lily_of_the_valley: Item;
-	readonly wither_rose: Item;
-	readonly sunflower: Item;
-	readonly lilac: Item;
-	readonly rose_bush: Item;
-	readonly peony: Item;
-	readonly tall_grass: Item;
-	readonly large_fern: Item;
-	readonly repeating_command_block: Item;
-	readonly chain_command_block: Item;
-	readonly chipped_anvil: Item;
-	readonly damaged_anvil: Item;
-	readonly rail: Item;
-	readonly powered_rail: Item;
-	readonly detector_rail: Item;
-	readonly activator_rail: Item;
-	readonly spawner: Item;
-	readonly flower_pot: Item;
-	readonly wooden_shovel: Item;
-	readonly wooden_axe: Item;
-	readonly wooden_hoe: Item;
-	readonly stone_shovel: Item;
-	readonly stone_axe: Item;
-	readonly stone_hoe: Item;
-	readonly iron_shovel: Item;
-	readonly iron_axe: Item;
-	readonly iron_hoe: Item;
-	readonly golden_shovel: Item;
-	readonly golden_pickaxe: Item;
-	readonly golden_axe: Item;
-	readonly golden_sword: Item;
-	readonly golden_hoe: Item;
-	readonly diamond_shovel: Item;
-	readonly diamond_axe: Item;
-	readonly diamond_hoe: Item;
-	readonly emerald_shovel: Item;
-	readonly emerald_pickaxe: Item;
-	readonly emerald_axe: Item;
-	readonly emerald_hoe: Item;
-	readonly infernium_pickaxe: Item;
-	readonly infernium_axe: Item;
-	readonly infernium_sword: Item;
-	readonly mace: Item;
-	readonly wooden_spear: Item;
-	readonly stone_spear: Item;
-	readonly iron_spear: Item;
-	readonly golden_spear: Item;
-	readonly diamond_spear: Item;
-	readonly infernium_spear: Item;
-	readonly baked_potato: Item;
-	readonly beef: Item;
-	readonly beetroot: Item;
-	readonly beetroot_soup: Item;
-	readonly carrot: Item;
-	readonly chicken: Item;
-	readonly cod: Item;
-	readonly cooked_chicken: Item;
-	readonly cooked_cod: Item;
-	readonly cooked_mutton: Item;
-	readonly cooked_rabbit: Item;
-	readonly cookie: Item;
-	readonly dried_kelp: Item;
-	readonly golden_carrot: Item;
-	readonly honey_bottle: Item;
-	readonly melon_slice: Item;
-	readonly mushroom_stew: Item;
-	readonly mutton: Item;
-	readonly poisonous_potato: Item;
-	readonly porkchop: Item;
-	readonly potato: Item;
-	readonly pufferfish: Item;
-	readonly pumpkin_pie: Item;
-	readonly rabbit: Item;
-	readonly rabbit_stew: Item;
-	readonly rotten_flesh: Item;
-	readonly salmon: Item;
-	readonly cooked_salmon: Item;
-	readonly spider_eye: Item;
-	readonly tropical_fish: Item;
-	readonly orange: Item;
-	readonly banana: Item;
-	readonly enchanted_golden_apple: Item;
-	readonly potion: Item;
+	readonly shears: Item;
 	readonly fishing_rod: Item;
-	readonly tipped_arrow: Item;
-	readonly spectral_arrow: Item;
+	readonly compass: Item;
+	readonly clock: Item;
+	readonly name_tag: Item;
+	readonly bucket: ItemBucket;
+	readonly water_bucket: ItemBucket;
+	readonly lava_bucket: ItemBucket;
+	readonly milk_bucket: Item;
+	readonly cod_bucket: ItemBucket;
+	readonly salmon_bucket: ItemBucket;
+	readonly pufferfish_bucket: ItemBucket;
+	readonly tropical_fish_bucket: ItemBucket;
+	readonly potion: Item;
+	readonly glass_bottle: Item;
+	readonly book: Item;
+	readonly writable_book: Item;
+	readonly written_book: Item;
+	readonly enchanted_book: Item;
+	readonly redstone: Item;
+	readonly redstone_torch: Item;
+	readonly repeater: ItemBlock;
+	readonly comparator: ItemBlock;
+	readonly minecart: Item;
+	readonly rail: ItemBlock;
+	readonly powered_rail: ItemBlock;
+	readonly detector_rail: ItemBlock;
+	readonly activator_rail: ItemBlock;
+	readonly oak_boat: Item;
+	readonly spruce_boat: Item;
+	readonly birch_boat: Item;
+	readonly jungle_boat: Item;
+	readonly acacia_boat: Item;
+	readonly dark_oak_boat: Item;
+	readonly pig_spawn_egg: ItemSpawnEgg;
+	readonly cow_spawn_egg: ItemSpawnEgg;
+	readonly chicken_spawn_egg: ItemSpawnEgg;
+	readonly sheep_spawn_egg: ItemSpawnEgg;
+	readonly wolf_spawn_egg: ItemSpawnEgg;
+	readonly cat_spawn_egg: ItemSpawnEgg;
+	readonly zombie_spawn_egg: ItemSpawnEgg;
+	readonly skeleton_spawn_egg: ItemSpawnEgg;
+	readonly creeper_spawn_egg: ItemSpawnEgg;
+	readonly slime_spawn_egg: ItemSpawnEgg;
+	readonly spider_spawn_egg: ItemSpawnEgg;
+	readonly villager_spawn_egg: ItemSpawnEgg;
 	readonly iron_ingot: Item;
 	readonly iron_nugget: Item;
 	readonly gold_ingot: Item;
@@ -758,93 +469,17 @@ export declare const Items: {
 	readonly charcoal: Item;
 	readonly diamond: Item;
 	readonly emerald: Item;
-	readonly redstone: Item;
 	readonly infernium_ingot: Item;
 	readonly stick: Item;
-	readonly book: Item;
-	readonly writable_book: Item;
-	readonly written_book: Item;
-	readonly enchanted_book: Item;
+	readonly leather: Item;
 	readonly string: Item;
 	readonly slime_ball: Item;
-	readonly shears: Item;
-	readonly leather_helmet: Item;
-	readonly leather_chestplate: Item;
-	readonly leather_leggings: Item;
-	readonly leather_boots: Item;
-	readonly golden_helmet: Item;
-	readonly golden_chestplate: Item;
-	readonly golden_leggings: Item;
-	readonly golden_boots: Item;
-	readonly emerald_helmet: Item;
-	readonly emerald_chestplate: Item;
-	readonly emerald_leggings: Item;
-	readonly emerald_boots: Item;
-	readonly infernium_helmet: Item;
-	readonly infernium_chestplate: Item;
-	readonly infernium_leggings: Item;
-	readonly infernium_boots: Item;
-	readonly stone_slab: Item;
-	readonly stone_brick_slab: Item;
-	readonly smooth_stone_slab: Item;
-	readonly marble_slab: Item;
-	readonly oak_slab: Item;
-	readonly spruce_slab: Item;
-	readonly birch_slab: Item;
-	readonly jungle_slab: Item;
-	readonly acacia_slab: Item;
-	readonly dark_oak_slab: Item;
-	readonly cobblestone_slab: Item;
-	readonly brick_slab: Item;
-	readonly sandstone_slab: Item;
-	readonly red_sandstone_slab: Item;
-	readonly granite_slab: Item;
-	readonly diorite_slab: Item;
-	readonly andesite_slab: Item;
-	readonly polished_granite_slab: Item;
-	readonly polished_diorite_slab: Item;
-	readonly polished_andesite_slab: Item;
-	readonly mossy_stone_brick_slab: Item;
-	readonly mossy_cobblestone_slab: Item;
-	readonly end_stone_brick_slab: Item;
-	readonly smooth_sandstone_slab: Item;
-	readonly smooth_red_sandstone_slab: Item;
-	readonly cut_sandstone_slab: Item;
-	readonly cut_red_sandstone_slab: Item;
-	readonly smooth_marble_slab: Item;
-	readonly hell_brick_slab: Item;
-	readonly red_hell_brick_slab: Item;
-	readonly purpur_slab: Item;
-	readonly aquastone_slab: Item;
-	readonly aquastone_brick_slab: Item;
-	readonly dark_aquastone_slab: Item;
-	readonly blackstone_slab: Item;
-	readonly polished_blackstone_slab: Item;
-	readonly polished_blackstone_brick_slab: Item;
-	readonly crimson_slab: Item;
-	readonly warped_slab: Item;
-	readonly oak_door: Item;
-	readonly iron_door: Item;
-	readonly spruce_door: Item;
-	readonly birch_door: Item;
-	readonly jungle_door: Item;
-	readonly acacia_door: Item;
-	readonly dark_oak_door: Item;
-	readonly crimson_door: Item;
-	readonly warped_door: Item;
-	readonly bucket: Item;
-	readonly water_bucket: Item;
-	readonly lava_bucket: Item;
-	readonly cod_bucket: Item;
-	readonly salmon_bucket: Item;
-	readonly pufferfish_bucket: Item;
-	readonly tropical_fish_bucket: Item;
 	readonly paper: Item;
-	readonly unknown_item: Item;
-	readonly leather: Item;
-	readonly hell_brick: Item;
-	readonly blaze_rod: Item;
+	readonly bone: Item;
+	readonly sugar: Item;
+	readonly gunpowder: Item;
 	readonly blaze_powder: Item;
+	readonly blaze_rod: Item;
 	readonly magma_cream: Item;
 	readonly glowstone_dust: Item;
 	readonly fermented_spider_eye: Item;
@@ -859,14 +494,12 @@ export declare const Items: {
 	readonly beetroot_seeds: Item;
 	readonly wheat: Item;
 	readonly bowl: Item;
-	readonly gunpowder: Item;
-	readonly acacia_sign: Item;
-	readonly birch_sign: Item;
-	readonly dark_oak_sign: Item;
-	readonly jungle_sign: Item;
-	readonly oak_sign: Item;
-	readonly spruce_sign: Item;
-	readonly player_head: Item;
+	readonly ghost_tear: Item;
+	readonly hell_brick: Item;
+	readonly marble: Item;
+	readonly brick: Item;
+	readonly clay_ball: Item;
+	readonly hell_star: Item;
 	readonly white_dye: Item;
 	readonly orange_dye: Item;
 	readonly magenta_dye: Item;
@@ -883,48 +516,617 @@ export declare const Items: {
 	readonly green_dye: Item;
 	readonly red_dye: Item;
 	readonly black_dye: Item;
-	readonly bone: Item;
-	readonly sugar: Item;
 	readonly bone_meal: Item;
 	readonly cocoa_beans: Item;
-	readonly hell_star: Item;
-	readonly brick: Item;
-	readonly clay_ball: Item;
+	readonly player_head: Item;
+	readonly item_frame: Item;
+	readonly armor_stand: Item;
+	readonly reeds: ItemBlock;
 	readonly torch: Item;
 	readonly soul_torch: Item;
 	readonly redstone_torch: Item;
-	readonly glass_bottle: Item;
-	readonly lily_pad: Item;
-	readonly marble: Item;
-	readonly elytra: Item;
-	readonly firework_rocket: Item;
-	readonly experience_bottle: Item;
-	readonly acacia_boat: Item;
-	readonly birch_boat: Item;
-	readonly dark_oak_boat: Item;
-	readonly jungle_boat: Item;
-	readonly oak_boat: Item;
-	readonly spruce_boat: Item;
-	readonly minecart: Item;
-	readonly item_frame: Item;
-	readonly armor_stand: Item;
-	readonly milk_bucket: Item;
-	readonly name_tag: Item;
-	readonly pig_spawn_egg: Item;
-	readonly cow_spawn_egg: Item;
-	readonly chicken_spawn_egg: Item;
-	readonly sheep_spawn_egg: Item;
-	readonly wolf_spawn_egg: Item;
-	readonly cat_spawn_egg: Item;
-	readonly zombie_spawn_egg: Item;
-	readonly skeleton_spawn_egg: Item;
-	readonly creeper_spawn_egg: Item;
-	readonly slime_spawn_egg: Item;
-	readonly spider_spawn_egg: Item;
-	readonly villager_spawn_egg: Item;
-	readonly clock: Item;
-	readonly compass: Item;
-	readonly ghost_tear: Item;
-	// Add more items as needed
+	readonly lily_pad: ItemBlock;
+	readonly fire_charge: Item;
+
+	// Unknown/Debug
+	readonly unknownItem: Item;
+
+	// Block items (ItemBlock) - Natural
+	readonly stone: ItemBlock;
+	readonly granite: ItemBlock;
+	readonly polished_granite: ItemBlock;
+	readonly diorite: ItemBlock;
+	readonly polished_diorite: ItemBlock;
+	readonly andesite: ItemBlock;
+	readonly polished_andesite: ItemBlock;
+	readonly grass_block: ItemBlock;
+	readonly dirt: ItemBlock;
+	readonly coarse_dirt: ItemBlock;
+	readonly podzol: ItemBlock;
+	readonly dirt_path: ItemBlock;
+	readonly cobblestone: ItemBlock;
+	readonly bedrock: ItemBlock;
+	readonly sand: ItemBlock;
+	readonly red_sand: ItemBlock;
+	readonly gravel: ItemBlock;
+	readonly gold_ore: ItemBlock;
+	readonly iron_ore: ItemBlock;
+	readonly coal_ore: ItemBlock;
+	readonly diamond_ore: ItemBlock;
+	readonly emerald_ore: ItemBlock;
+	readonly lapis_ore: ItemBlock;
+	readonly redstone_ore: ItemBlock;
+	readonly hell_marble_ore: ItemBlock;
+	readonly infernium_ore: ItemBlock;
+	readonly hell_gold_ore: ItemBlock;
+	readonly sponge: ItemBlock;
+	readonly wet_sponge: ItemBlock;
+	readonly ice: ItemBlock;
+	readonly packed_ice: ItemBlock;
+	readonly blue_ice: ItemBlock;
+	readonly snow_block: ItemBlock;
+	readonly snow: ItemBlock;
+	readonly clay: ItemBlock;
+	readonly magma_block: ItemBlock;
+	readonly soul_sand: ItemBlock;
+	readonly soul_soil: ItemBlock;
+	readonly basalt: ItemBlock;
+	readonly polished_basalt: ItemBlock;
+	readonly crying_obsidian: ItemBlock;
+	readonly obsidian: ItemBlock;
+	readonly end_stone: ItemBlock;
+	readonly end_stone_bricks: ItemBlock;
+	readonly dragon_egg: ItemBlock;
+
+	// Block items - Wood
+	readonly oak_log: ItemBlock;
+	readonly spruce_log: ItemBlock;
+	readonly birch_log: ItemBlock;
+	readonly jungle_log: ItemBlock;
+	readonly acacia_log: ItemBlock;
+	readonly dark_oak_log: ItemBlock;
+	readonly stripped_oak_log: ItemBlock;
+	readonly stripped_spruce_log: ItemBlock;
+	readonly stripped_birch_log: ItemBlock;
+	readonly stripped_jungle_log: ItemBlock;
+	readonly stripped_acacia_log: ItemBlock;
+	readonly stripped_dark_oak_log: ItemBlock;
+	readonly oak_wood: ItemBlock;
+	readonly spruce_wood: ItemBlock;
+	readonly birch_wood: ItemBlock;
+	readonly jungle_wood: ItemBlock;
+	readonly acacia_wood: ItemBlock;
+	readonly dark_oak_wood: ItemBlock;
+	readonly stripped_oak_wood: ItemBlock;
+	readonly stripped_spruce_wood: ItemBlock;
+	readonly stripped_birch_wood: ItemBlock;
+	readonly stripped_jungle_wood: ItemBlock;
+	readonly stripped_acacia_wood: ItemBlock;
+	readonly stripped_dark_oak_wood: ItemBlock;
+	readonly oak_planks: ItemBlock;
+	readonly spruce_planks: ItemBlock;
+	readonly birch_planks: ItemBlock;
+	readonly jungle_planks: ItemBlock;
+	readonly acacia_planks: ItemBlock;
+	readonly dark_oak_planks: ItemBlock;
+	readonly crimson_stem: ItemBlock;
+	readonly warped_stem: ItemBlock;
+	readonly stripped_crimson_stem: ItemBlock;
+	readonly stripped_warped_stem: ItemBlock;
+	readonly crimson_hyphae: ItemBlock;
+	readonly warped_hyphae: ItemBlock;
+	readonly stripped_crimson_hyphae: ItemBlock;
+	readonly stripped_warped_hyphae: ItemBlock;
+	readonly crimson_planks: ItemBlock;
+	readonly warped_planks: ItemBlock;
+
+	// Block items - Leaves & Saplings
+	readonly oak_leaves: ItemBlock;
+	readonly spruce_leaves: ItemBlock;
+	readonly birch_leaves: ItemBlock;
+	readonly jungle_leaves: ItemBlock;
+	readonly acacia_leaves: ItemBlock;
+	readonly dark_oak_leaves: ItemBlock;
+	readonly oak_sapling: ItemBlock;
+	readonly spruce_sapling: ItemBlock;
+	readonly birch_sapling: ItemBlock;
+	readonly jungle_sapling: ItemBlock;
+	readonly acacia_sapling: ItemBlock;
+	readonly dark_oak_sapling: ItemBlock;
+
+	// Block items - Glass
+	readonly glass: ItemBlock;
+	readonly glass_pane: ItemBlock;
+	readonly white_stained_glass: ItemBlock;
+	readonly orange_stained_glass: ItemBlock;
+	readonly magenta_stained_glass: ItemBlock;
+	readonly light_blue_stained_glass: ItemBlock;
+	readonly yellow_stained_glass: ItemBlock;
+	readonly lime_stained_glass: ItemBlock;
+	readonly pink_stained_glass: ItemBlock;
+	readonly gray_stained_glass: ItemBlock;
+	readonly light_gray_stained_glass: ItemBlock;
+	readonly cyan_stained_glass: ItemBlock;
+	readonly purple_stained_glass: ItemBlock;
+	readonly blue_stained_glass: ItemBlock;
+	readonly brown_stained_glass: ItemBlock;
+	readonly green_stained_glass: ItemBlock;
+	readonly red_stained_glass: ItemBlock;
+	readonly black_stained_glass: ItemBlock;
+	readonly white_stained_glass_pane: ItemBlock;
+	readonly orange_stained_glass_pane: ItemBlock;
+	readonly magenta_stained_glass_pane: ItemBlock;
+	readonly light_blue_stained_glass_pane: ItemBlock;
+	readonly yellow_stained_glass_pane: ItemBlock;
+	readonly lime_stained_glass_pane: ItemBlock;
+	readonly pink_stained_glass_pane: ItemBlock;
+	readonly gray_stained_glass_pane: ItemBlock;
+	readonly light_gray_stained_glass_pane: ItemBlock;
+	readonly cyan_stained_glass_pane: ItemBlock;
+	readonly purple_stained_glass_pane: ItemBlock;
+	readonly blue_stained_glass_pane: ItemBlock;
+	readonly brown_stained_glass_pane: ItemBlock;
+	readonly green_stained_glass_pane: ItemBlock;
+	readonly red_stained_glass_pane: ItemBlock;
+	readonly black_stained_glass_pane: ItemBlock;
+
+	// Block items - Mineral Blocks
+	readonly coal_block: ItemBlock;
+	readonly iron_block: ItemBlock;
+	readonly gold_block: ItemBlock;
+	readonly diamond_block: ItemBlock;
+	readonly emerald_block: ItemBlock;
+	readonly infernium_block: ItemBlock;
+	readonly lapis_block: ItemBlock;
+	readonly redstone_block: ItemBlock;
+
+	// Block items - Sandstone
+	readonly sandstone: ItemBlock;
+	readonly chiseled_sandstone: ItemBlock;
+	readonly smooth_sandstone: ItemBlock;
+	readonly cut_sandstone: ItemBlock;
+	readonly red_sandstone: ItemBlock;
+	readonly chiseled_red_sandstone: ItemBlock;
+	readonly smooth_red_sandstone: ItemBlock;
+	readonly cut_red_sandstone: ItemBlock;
+
+	// Block items - Marble
+	readonly marble_block: ItemBlock;
+	readonly marble_pillar: ItemBlock;
+	readonly chiseled_marble_block: ItemBlock;
+	readonly smooth_marble: ItemBlock;
+	readonly marble_bricks: ItemBlock;
+
+	// Block items - Aquastone
+	readonly aquastone: ItemBlock;
+	readonly aquastone_bricks: ItemBlock;
+	readonly dark_aquastone: ItemBlock;
+
+	// Block items - Wool
+	readonly white_wool: ItemBlock;
+	readonly orange_wool: ItemBlock;
+	readonly magenta_wool: ItemBlock;
+	readonly light_blue_wool: ItemBlock;
+	readonly yellow_wool: ItemBlock;
+	readonly lime_wool: ItemBlock;
+	readonly pink_wool: ItemBlock;
+	readonly gray_wool: ItemBlock;
+	readonly light_gray_wool: ItemBlock;
+	readonly cyan_wool: ItemBlock;
+	readonly purple_wool: ItemBlock;
+	readonly blue_wool: ItemBlock;
+	readonly brown_wool: ItemBlock;
+	readonly green_wool: ItemBlock;
+	readonly red_wool: ItemBlock;
+	readonly black_wool: ItemBlock;
+
+	// Block items - Terracotta
+	readonly terracotta: ItemBlock;
+	readonly white_terracotta: ItemBlock;
+	readonly orange_terracotta: ItemBlock;
+	readonly magenta_terracotta: ItemBlock;
+	readonly light_blue_terracotta: ItemBlock;
+	readonly yellow_terracotta: ItemBlock;
+	readonly lime_terracotta: ItemBlock;
+	readonly pink_terracotta: ItemBlock;
+	readonly gray_terracotta: ItemBlock;
+	readonly light_gray_terracotta: ItemBlock;
+	readonly cyan_terracotta: ItemBlock;
+	readonly purple_terracotta: ItemBlock;
+	readonly blue_terracotta: ItemBlock;
+	readonly brown_terracotta: ItemBlock;
+	readonly green_terracotta: ItemBlock;
+	readonly red_terracotta: ItemBlock;
+	readonly black_terracotta: ItemBlock;
+
+	// Block items - Glazed Terracotta
+	readonly white_glazed_terracotta: ItemBlock;
+	readonly orange_glazed_terracotta: ItemBlock;
+	readonly magenta_glazed_terracotta: ItemBlock;
+	readonly light_blue_glazed_terracotta: ItemBlock;
+	readonly yellow_glazed_terracotta: ItemBlock;
+	readonly lime_glazed_terracotta: ItemBlock;
+	readonly pink_glazed_terracotta: ItemBlock;
+	readonly gray_glazed_terracotta: ItemBlock;
+	readonly light_gray_glazed_terracotta: ItemBlock;
+	readonly cyan_glazed_terracotta: ItemBlock;
+	readonly purple_glazed_terracotta: ItemBlock;
+	readonly blue_glazed_terracotta: ItemBlock;
+	readonly brown_glazed_terracotta: ItemBlock;
+	readonly green_glazed_terracotta: ItemBlock;
+	readonly red_glazed_terracotta: ItemBlock;
+	readonly black_glazed_terracotta: ItemBlock;
+
+	// Block items - Concrete
+	readonly white_concrete: ItemBlock;
+	readonly orange_concrete: ItemBlock;
+	readonly magenta_concrete: ItemBlock;
+	readonly light_blue_concrete: ItemBlock;
+	readonly yellow_concrete: ItemBlock;
+	readonly lime_concrete: ItemBlock;
+	readonly pink_concrete: ItemBlock;
+	readonly gray_concrete: ItemBlock;
+	readonly light_gray_concrete: ItemBlock;
+	readonly cyan_concrete: ItemBlock;
+	readonly purple_concrete: ItemBlock;
+	readonly blue_concrete: ItemBlock;
+	readonly brown_concrete: ItemBlock;
+	readonly green_concrete: ItemBlock;
+	readonly red_concrete: ItemBlock;
+	readonly black_concrete: ItemBlock;
+
+	// Block items - Concrete Powder
+	readonly white_concrete_powder: ItemBlock;
+	readonly orange_concrete_powder: ItemBlock;
+	readonly magenta_concrete_powder: ItemBlock;
+	readonly light_blue_concrete_powder: ItemBlock;
+	readonly yellow_concrete_powder: ItemBlock;
+	readonly lime_concrete_powder: ItemBlock;
+	readonly pink_concrete_powder: ItemBlock;
+	readonly gray_concrete_powder: ItemBlock;
+	readonly light_gray_concrete_powder: ItemBlock;
+	readonly cyan_concrete_powder: ItemBlock;
+	readonly purple_concrete_powder: ItemBlock;
+	readonly blue_concrete_powder: ItemBlock;
+	readonly brown_concrete_powder: ItemBlock;
+	readonly green_concrete_powder: ItemBlock;
+	readonly red_concrete_powder: ItemBlock;
+	readonly black_concrete_powder: ItemBlock;
+
+	// Block items - Carpet
+	readonly white_carpet: ItemBlock;
+	readonly orange_carpet: ItemBlock;
+	readonly magenta_carpet: ItemBlock;
+	readonly light_blue_carpet: ItemBlock;
+	readonly yellow_carpet: ItemBlock;
+	readonly lime_carpet: ItemBlock;
+	readonly pink_carpet: ItemBlock;
+	readonly gray_carpet: ItemBlock;
+	readonly light_gray_carpet: ItemBlock;
+	readonly cyan_carpet: ItemBlock;
+	readonly purple_carpet: ItemBlock;
+	readonly blue_carpet: ItemBlock;
+	readonly brown_carpet: ItemBlock;
+	readonly green_carpet: ItemBlock;
+	readonly red_carpet: ItemBlock;
+	readonly black_carpet: ItemBlock;
+
+	// Block items - Nether
+	readonly hellstone: ItemBlock;
+	readonly hell_bricks: ItemBlock;
+	readonly red_hell_bricks: ItemBlock;
+	readonly chiseled_hell_bricks: ItemBlock;
+	readonly cracked_hell_bricks: ItemBlock;
+	readonly hell_fungus_block: ItemBlock;
+	readonly crimson_nylium: ItemBlock;
+	readonly warped_nylium: ItemBlock;
+	readonly warped_wart_block: ItemBlock;
+	readonly crimson_fungus: ItemBlock;
+	readonly warped_fungus: ItemBlock;
+	readonly crimson_roots: ItemBlock;
+	readonly warped_roots: ItemBlock;
+	readonly hell_sprouts: ItemBlock;
+
+	// Block items - Stone Variants
+	readonly stone_bricks: ItemBlock;
+	readonly smooth_stone: ItemBlock;
+	readonly mossy_stone_bricks: ItemBlock;
+	readonly cracked_stone_bricks: ItemBlock;
+	readonly chiseled_stone_bricks: ItemBlock;
+	readonly mossy_cobblestone: ItemBlock;
+	readonly blackstone: ItemBlock;
+	readonly polished_blackstone: ItemBlock;
+	readonly polished_blackstone_bricks: ItemBlock;
+	readonly cracked_polished_blackstone_bricks: ItemBlock;
+	readonly chiseled_polished_blackstone: ItemBlock;
+	readonly gilded_blackstone: ItemBlock;
+
+	// Block items - Other
+	readonly note_block: ItemBlock;
+	readonly bookshelf: ItemBlock;
+	readonly workbench: ItemBlock;
+	readonly bricks: ItemBlock;
+	readonly tnt: ItemBlock;
+	readonly jukebox: ItemBlock;
+	readonly glowstone: ItemBlock;
+	readonly sea_lantern: ItemBlock;
+	readonly slime_block: ItemBlock;
+	readonly hay_block: ItemBlock;
+	readonly bone_block: ItemBlock;
+	readonly honeycomb_block: ItemBlock;
+	readonly honey_block: ItemBlock;
+	readonly purpur_block: ItemBlock;
+	readonly purpur_pillar: ItemBlock;
+	readonly meteorite_block: ItemBlock;
+	readonly cloud_block: ItemBlock;
+	readonly campfire: ItemBlock;
+	readonly soul_campfire: ItemBlock;
+	readonly lantern: ItemBlock;
+	readonly soul_lantern: ItemBlock;
+	readonly shroomlight: ItemBlock;
+	readonly lodestone: ItemBlock;
+	readonly command_block: ItemBlock;
+	readonly repeating_command_block: ItemBlock;
+	readonly chain_command_block: ItemBlock;
+	readonly barrier: ItemBlock;
+	readonly spawner: ItemBlock;
+
+	// Block items - Redstone
+	readonly sticky_piston: ItemBlock;
+	readonly piston: ItemBlock;
+	readonly lever: ItemBlock;
+	readonly redstone_lamp: ItemBlock;
+	readonly observer: ItemBlock;
+	readonly target: ItemBlock;
+	readonly dispenser: ItemBlock;
+	readonly dropper: ItemBlock;
+	readonly hopper: ItemBlock;
+
+	// Block items - Plants & Flora
+	readonly poppy: ItemBlock;
+	readonly dandelion: ItemBlock;
+	readonly blue_orchid: ItemBlock;
+	readonly allium: ItemBlock;
+	readonly azure_bluet: ItemBlock;
+	readonly red_tulip: ItemBlock;
+	readonly orange_tulip: ItemBlock;
+	readonly white_tulip: ItemBlock;
+	readonly pink_tulip: ItemBlock;
+	readonly oxeye_daisy: ItemBlock;
+	readonly cornflower: ItemBlock;
+	readonly lily_of_the_valley: ItemBlock;
+	readonly wither_rose: ItemBlock;
+	readonly sunflower: ItemBlock;
+	readonly lilac: ItemBlock;
+	readonly rose_bush: ItemBlock;
+	readonly peony: ItemBlock;
+	readonly tall_grass: ItemBlock;
+	readonly large_fern: ItemBlock;
+	readonly fern: ItemBlock;
+	readonly dead_bush: ItemBlock;
+	readonly grass: ItemBlock;
+	readonly cactus: ItemBlock;
+	readonly sugar_cane: ItemBlock;
+	readonly vine: ItemBlock;
+	readonly red_mushroom: ItemBlock;
+	readonly brown_mushroom: ItemBlock;
+	readonly brown_mushroom_block: ItemBlock;
+	readonly red_mushroom_block: ItemBlock;
+	readonly mushroom_stem: ItemBlock;
+	readonly melon: ItemBlock;
+	readonly pumpkin: ItemBlock;
+	readonly carved_pumpkin: ItemBlock;
+	readonly jack_o_lantern: ItemBlock;
+
+	// Block items - Beds (plain Item, not ItemBlock)
+	readonly white_bed: Item;
+	readonly orange_bed: Item;
+	readonly magenta_bed: Item;
+	readonly light_blue_bed: Item;
+	readonly yellow_bed: Item;
+	readonly lime_bed: Item;
+	readonly pink_bed: Item;
+	readonly gray_bed: Item;
+	readonly light_gray_bed: Item;
+	readonly cyan_bed: Item;
+	readonly purple_bed: Item;
+	readonly blue_bed: Item;
+	readonly brown_bed: Item;
+	readonly green_bed: Item;
+	readonly red_bed: Item;
+	readonly black_bed: Item;
+
+	// Block items - Signs
+	readonly oak_sign: ItemBlock;
+	readonly spruce_sign: ItemBlock;
+	readonly birch_sign: ItemBlock;
+	readonly jungle_sign: ItemBlock;
+	readonly acacia_sign: ItemBlock;
+	readonly dark_oak_sign: ItemBlock;
+
+	// Block items - Doors (have .block property)
+	readonly oak_door: ItemBlock;
+	readonly iron_door: ItemBlock;
+	readonly spruce_door: ItemBlock;
+	readonly birch_door: ItemBlock;
+	readonly jungle_door: ItemBlock;
+	readonly acacia_door: ItemBlock;
+	readonly dark_oak_door: ItemBlock;
+	readonly crimson_door: ItemBlock;
+	readonly warped_door: ItemBlock;
+
+	// Block items - Trapdoors
+	readonly oak_trapdoor: ItemBlock;
+	readonly spruce_trapdoor: ItemBlock;
+	readonly birch_trapdoor: ItemBlock;
+	readonly jungle_trapdoor: ItemBlock;
+	readonly acacia_trapdoor: ItemBlock;
+	readonly dark_oak_trapdoor: ItemBlock;
+	readonly iron_trapdoor: ItemBlock;
+	readonly crimson_trapdoor: ItemBlock;
+	readonly warped_trapdoor: ItemBlock;
+
+	// Block items - Buttons
+	readonly stone_button: ItemBlock;
+	readonly oak_button: ItemBlock;
+	readonly spruce_button: ItemBlock;
+	readonly birch_button: ItemBlock;
+	readonly jungle_button: ItemBlock;
+	readonly acacia_button: ItemBlock;
+	readonly dark_oak_button: ItemBlock;
+	readonly crimson_button: ItemBlock;
+	readonly warped_button: ItemBlock;
+	readonly polished_blackstone_button: ItemBlock;
+
+	// Block items - Pressure Plates
+	readonly stone_pressure_plate: ItemBlock;
+	readonly oak_pressure_plate: ItemBlock;
+	readonly spruce_pressure_plate: ItemBlock;
+	readonly birch_pressure_plate: ItemBlock;
+	readonly jungle_pressure_plate: ItemBlock;
+	readonly acacia_pressure_plate: ItemBlock;
+	readonly dark_oak_pressure_plate: ItemBlock;
+	readonly crimson_pressure_plate: ItemBlock;
+	readonly warped_pressure_plate: ItemBlock;
+	readonly polished_blackstone_pressure_plate: ItemBlock;
+	readonly light_weighted_pressure_plate: ItemBlock;
+	readonly heavy_weighted_pressure_plate: ItemBlock;
+
+	// Block items - Fences
+	readonly oak_fence: ItemBlock;
+	readonly spruce_fence: ItemBlock;
+	readonly birch_fence: ItemBlock;
+	readonly jungle_fence: ItemBlock;
+	readonly acacia_fence: ItemBlock;
+	readonly dark_oak_fence: ItemBlock;
+	readonly hell_brick_fence: ItemBlock;
+	readonly crimson_fence: ItemBlock;
+	readonly warped_fence: ItemBlock;
+	readonly iron_bars: ItemBlock;
+
+	// Block items - Fence Gates
+	readonly oak_fence_gate: ItemBlock;
+	readonly spruce_fence_gate: ItemBlock;
+	readonly birch_fence_gate: ItemBlock;
+	readonly jungle_fence_gate: ItemBlock;
+	readonly acacia_fence_gate: ItemBlock;
+	readonly dark_oak_fence_gate: ItemBlock;
+	readonly crimson_fence_gate: ItemBlock;
+	readonly warped_fence_gate: ItemBlock;
+
+	// Block items - Walls
+	readonly andesite_wall: ItemBlock;
+	readonly blackstone_wall: ItemBlock;
+	readonly polished_blackstone_wall: ItemBlock;
+	readonly polished_blackstone_brick_wall: ItemBlock;
+	readonly brick_wall: ItemBlock;
+	readonly cobblestone_wall: ItemBlock;
+	readonly diorite_wall: ItemBlock;
+	readonly end_stone_brick_wall: ItemBlock;
+	readonly granite_wall: ItemBlock;
+	readonly mossy_cobblestone_wall: ItemBlock;
+	readonly mossy_stone_brick_wall: ItemBlock;
+	readonly hell_brick_wall: ItemBlock;
+	readonly red_hell_brick_wall: ItemBlock;
+	readonly sandstone_wall: ItemBlock;
+	readonly stone_brick_wall: ItemBlock;
+	readonly red_sandstone_wall: ItemBlock;
+	readonly aquastone_wall: ItemBlock;
+
+	// Block items - Slabs
+	readonly stone_slab: ItemBlock;
+	readonly stone_brick_slab: ItemBlock;
+	readonly smooth_stone_slab: ItemBlock;
+	readonly marble_slab: ItemBlock;
+	readonly oak_slab: ItemBlock;
+	readonly spruce_slab: ItemBlock;
+	readonly birch_slab: ItemBlock;
+	readonly jungle_slab: ItemBlock;
+	readonly acacia_slab: ItemBlock;
+	readonly dark_oak_slab: ItemBlock;
+	readonly cobblestone_slab: ItemBlock;
+	readonly brick_slab: ItemBlock;
+	readonly sandstone_slab: ItemBlock;
+	readonly red_sandstone_slab: ItemBlock;
+	readonly granite_slab: ItemBlock;
+	readonly diorite_slab: ItemBlock;
+	readonly andesite_slab: ItemBlock;
+	readonly polished_granite_slab: ItemBlock;
+	readonly polished_diorite_slab: ItemBlock;
+	readonly polished_andesite_slab: ItemBlock;
+	readonly mossy_stone_brick_slab: ItemBlock;
+	readonly mossy_cobblestone_slab: ItemBlock;
+	readonly end_stone_brick_slab: ItemBlock;
+	readonly smooth_sandstone_slab: ItemBlock;
+	readonly smooth_red_sandstone_slab: ItemBlock;
+	readonly cut_sandstone_slab: ItemBlock;
+	readonly cut_red_sandstone_slab: ItemBlock;
+	readonly smooth_marble_slab: ItemBlock;
+	readonly hell_brick_slab: ItemBlock;
+	readonly red_hell_brick_slab: ItemBlock;
+	readonly purpur_slab: ItemBlock;
+	readonly aquastone_slab: ItemBlock;
+	readonly aquastone_brick_slab: ItemBlock;
+	readonly dark_aquastone_slab: ItemBlock;
+	readonly blackstone_slab: ItemBlock;
+	readonly polished_blackstone_slab: ItemBlock;
+	readonly polished_blackstone_brick_slab: ItemBlock;
+	readonly crimson_slab: ItemBlock;
+	readonly warped_slab: ItemBlock;
+
+	// Block items - Stairs
+	readonly oak_stairs: ItemBlock;
+	readonly spruce_stairs: ItemBlock;
+	readonly birch_stairs: ItemBlock;
+	readonly jungle_stairs: ItemBlock;
+	readonly acacia_stairs: ItemBlock;
+	readonly dark_oak_stairs: ItemBlock;
+	readonly stone_stairs: ItemBlock;
+	readonly cobblestone_stairs: ItemBlock;
+	readonly brick_stairs: ItemBlock;
+	readonly stone_brick_stairs: ItemBlock;
+	readonly hell_brick_stairs: ItemBlock;
+	readonly sandstone_stairs: ItemBlock;
+	readonly smooth_sandstone_stairs: ItemBlock;
+	readonly red_sandstone_stairs: ItemBlock;
+	readonly smooth_red_sandstone_stairs: ItemBlock;
+	readonly marble_stairs: ItemBlock;
+	readonly smooth_marble_stairs: ItemBlock;
+	readonly andesite_stairs: ItemBlock;
+	readonly diorite_stairs: ItemBlock;
+	readonly granite_stairs: ItemBlock;
+	readonly polished_andesite_stairs: ItemBlock;
+	readonly polished_diorite_stairs: ItemBlock;
+	readonly polished_granite_stairs: ItemBlock;
+	readonly end_stone_brick_stairs: ItemBlock;
+	readonly aquastone_stairs: ItemBlock;
+	readonly aquastone_brick_stairs: ItemBlock;
+	readonly dark_aquastone_stairs: ItemBlock;
+	readonly mossy_cobblestone_stairs: ItemBlock;
+	readonly mossy_stone_brick_stairs: ItemBlock;
+	readonly purpur_stairs: ItemBlock;
+	readonly red_hell_brick_stairs: ItemBlock;
+	readonly blackstone_stairs: ItemBlock;
+	readonly polished_blackstone_stairs: ItemBlock;
+	readonly polished_blackstone_brick_stairs: ItemBlock;
+	readonly crimson_stairs: ItemBlock;
+	readonly warped_stairs: ItemBlock;
+
+	// Block items - Utility
+	readonly chest: ItemBlock;
+	readonly ender_chest: ItemBlock;
+	readonly furnace: ItemBlock;
+	readonly barrel: ItemBlock;
+	readonly brewing_stand: ItemBlock;
+	readonly cauldron: ItemBlock;
+	readonly enchanting_table: ItemBlock;
+	readonly anvil: ItemBlock;
+	readonly chipped_anvil: ItemBlock;
+	readonly damaged_anvil: ItemBlock;
+	readonly flower_pot: ItemBlock;
+	readonly ladder: ItemBlock;
+	readonly iron_ladder: ItemBlock;
+
+	// Allow any string key for extensibility
 	[key: string]: Item;
 };

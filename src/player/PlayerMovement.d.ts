@@ -1,29 +1,14 @@
 import type { EntityPlayer } from "../entities/EntityPlayer";
-import type {
-	CPacketPlayerReconciliation,
-	SPacketPlayerInput,
-} from "../packets";
 
 export declare class PlayerMovement extends EntityPlayer {
-	flyToggleTimer: number;
-	sprintToggleTimer: number;
-	sprintingTicksLeft: number;
-	currentInput: SPacketPlayerInput | null; // SPacketPlayerInput
-	inputSequenceNumber: number;
-	pendingInputs: SPacketPlayerInput[]; // SPacketPlayerInput[]
-	serverDistance: number;
-	/** **IMPORTANT**: USE DUMPS */
+	/** IMPORTANT: USE DUMPS */
 	moveStrafe: number;
-	/** **IMPORTANT**: USE DUMPS */
+	/** IMPORTANT: USE DUMPS */
 	moveForward: number;
-	jumping: boolean;
 	constructor();
 	reset(): void;
-	updatePlayerMoveState(): void;
-	reconcileServerPosition(packet: CPacketPlayerReconciliation): void; // CPacketPlayerReconciliation
-	checkHeadInBlock(): void;
-	getFovModifier(): number;
-	fixedUpdate(): void;
+	/** IMPORTANT: USE DUMPS */
+	applyInput(input: { right: boolean; left: boolean; up: boolean; down: boolean; yaw: number; pitch: number; jump: boolean; sneak: boolean; usingItem: boolean }, t?: boolean): void;
 }
 
 export { PlayerMovement };

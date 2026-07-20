@@ -142,6 +142,10 @@ export declare class Game {
 	static readonly RESPAWN_SETTLE_MS = 150;
 	enterWorldListeners: Set<() => void>;
 	pendingAutoCover: null;
+	pendingTransferNotice: unknown;
+	connectionEpoch: number;
+	respawnWaitStartedAt: number;
+	titleHeartbeatId: number;
 	loadedPlanet: string | null;
 	whispers: Whispers;
 	resourceMonitor: ResourceMonitor;
