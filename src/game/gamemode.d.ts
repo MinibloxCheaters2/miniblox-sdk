@@ -23,6 +23,7 @@ export class Abilities {
 	allowEdit: boolean;
 	flySpeed: number;
 	walkSpeed: number;
+	creative: boolean;
 
 	getFlySpeed(): number;
 	setFlySpeed(speed: number): void;

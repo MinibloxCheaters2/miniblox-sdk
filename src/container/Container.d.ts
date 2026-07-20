@@ -1,5 +1,5 @@
 import type { EntityPlayer } from "../entities";
-import type { InventoryBasic, InventoryPlayer } from "../inventory";
+import type { Containers, InventoryPlayer } from "../inventory";
 import type { ItemStack } from "../items";
 import type { Slot } from "../slot";
 import type { ICrafting } from "../undefined";
@@ -80,9 +80,9 @@ export class Container {
 		endIndex: number,
 		reverseDirection: boolean,
 	): boolean;
-	static calcRedstone(inv: InventoryBasic): number;
+	static calcRedstone(inv: Containers): number;
 	static calcRedstone(anythingElse: unknown): 0;
-	static calcRedstone(inv: InventoryBasic): number;
+	static calcRedstone(inv: Containers): number;
 	static calcRedstoneFromInventory(inv: null): 0;
-	static calcRedstoneFromInventory(inv: InventoryBasic | null): number;
+	static calcRedstoneFromInventory(inv: Containers | null): number;
 }

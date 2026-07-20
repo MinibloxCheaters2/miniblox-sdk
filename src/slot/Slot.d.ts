@@ -1,10 +1,10 @@
 import type { EntityPlayer } from "../entities/EntityPlayer";
-import type { InventoryBasic } from "../inventory";
+import type { Containers } from "../inventory";
 import type { ItemStack } from "../items";
 
 export class Slot {
 	slotIndex: number;
-	inventory: InventoryBasic;
+	inventory: Containers;
 	slotNumber: number;
 	xDisplayPosition: number;
 	yDisplayPosition: number;
@@ -15,7 +15,7 @@ export class Slot {
 	 * @param _yDisplayPos unused parameter left over from MCP code.
 	 */
 	constructor(
-		inventory: InventoryBasic,
+		inventory: Containers,
 		index: number,
 		_xDisplayPos: number,
 		_yDisplayPos: number,
@@ -38,5 +38,5 @@ export class Slot {
 	decrStackSize(count: number): ItemStack | null;
 	canTakeStack(player: EntityPlayer): boolean;
 	canBeHovered(): boolean;
-	isHere(inv: InventoryBasic, slot: number): boolean;
+	isHere(inv: Containers, slot: number): boolean;
 }

@@ -1,14 +1,27 @@
+/**
+ * 1 => No Push Mobilty
+ * 2 => Immovable Mobility
+ */
+export type MobilityFlag = 1 | 2;
 // Material types for blocks
 export class Material {
-	readonly air: boolean;
-	isSolid(): boolean;
+	canBurn: boolean;
+	requiresNoTool: boolean;
+	mobilityFlag: MobilityFlag;
+	constructor(public materialMapColor: number);
 	isLiquid(): boolean;
+	isSolid(): boolean;
+	isSolidVisually(): boolean;
+	blocksLight(): boolean;
 	blocksMovement(): boolean;
-	getCanBurn(): boolean;
-	isReplaceable(): boolean;
-	isOpaque(): boolean;
-	isToolNotRequired(): boolean;
-	getMobilityFlag(): number;
+	setBurning(): this;
+	setRequiresTool(): this;
+	setNoPushMobility(): this;
+	setImmovableMobility(): this;
+	setTranslucent(): this;
+	isOpaque(): ReturnType<this["isTranslucent"]> extends true
+		? false
+		: ReturnType<this["blocksMovement"]>;
 }
 
 // Global Materials registry
