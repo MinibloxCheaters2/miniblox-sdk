@@ -1,5 +1,3 @@
-// GameMode and Abilities extracted from Impact
-
 export declare class GameMode {
 	static readonly SURVIVAL: GameMode;
 	static readonly CREATIVE: GameMode;
@@ -11,10 +9,9 @@ export declare class GameMode {
 
 	getId(): number;
 	getName(): string;
-	isSurvivalOrAdventure(): boolean;
+	isBlockPlacingRestricted(): boolean;
 	isCreative(): boolean;
 	isSurvival(): boolean;
-	isAdventure(): boolean;
 	isSpectator(): boolean;
 }
 
