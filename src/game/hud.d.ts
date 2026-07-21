@@ -83,6 +83,7 @@ export declare class TextureManager {
 	old_miniblox_font: Font;
 	atlas;
 	materialWorld;
+	/** IMPORTANT: USE DUMPS */
 	materialTransparentWorld;
 	material;
 	materialEnchanted;

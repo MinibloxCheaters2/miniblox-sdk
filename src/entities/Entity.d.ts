@@ -144,4 +144,12 @@ export declare class Entity {
 	hasDaylightSky(): boolean;
 	isUsingOffHand(): boolean;
 	setUsingOffHand(using: boolean): void;
+	/** IMPORTANT: USE DUMPS */
+	isInvisible(): boolean;
+	/** IMPORTANT: USE DUMPS */
+	getFlag(flag: number): boolean;
+	/** IMPORTANT: USE DUMPS */
+	setFlag(flag: number, value: boolean): void;
+	/** IMPORTANT: USE DUMPS */
+	isInvisibleToPlayer(player: EntityPlayer): boolean;
 }

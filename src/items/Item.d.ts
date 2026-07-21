@@ -182,6 +182,8 @@ export class ItemArmor extends Item {
 	renderIndex: number;
 	material: unknown;
 	toughness: number;
+	/** IMPORTANT: USE DUMPS */
+	damageReduceAmount: number;
 
 	getArmorMaterial(): string;
 }

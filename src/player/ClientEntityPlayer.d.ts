@@ -1,3 +1,4 @@
+import type { Vector3 } from "three";
 import type { Game } from "../game";
 import type { CPacketRespawn } from "../packets";
 import type { Profile } from "../undefined";
@@ -11,6 +12,8 @@ export declare class ClientEntityPlayer extends PlayerMovement {
 	sendRespawnPacket(): void;
 	fixedUpdate(): void;
 	openShop(): void;
+	/** IMPORTANT: USE DUMPS */
+	getMoveDirection(yaw: number): Vector3;
 }
 
 export { ClientEntityPlayer };

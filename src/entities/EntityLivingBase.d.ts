@@ -82,6 +82,8 @@ export declare class EntityLivingBase extends Entity {
 	getSoundInfo(): unknown;
 	isElytraFlying(): boolean;
 	isSpearCharging(): boolean;
+	/** IMPORTANT: USE DUMPS */
+	pushOutOfBlocks(x: number, y: number, z: number): boolean;
 }
 
 export { EntityLivingBase };

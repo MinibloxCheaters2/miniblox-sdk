@@ -213,6 +213,8 @@ export declare class EntityPlayer extends EntityLivingBase {
 	serverUsesInputMovement(): boolean;
 	serverUsesPosLookMovement(): boolean;
 	fixedUpdate(): void;
+	/** IMPORTANT: USE DUMPS */
+	updatePlayerMoveState(): void;
 }
 
 export { EntityPlayer, IInterface };
