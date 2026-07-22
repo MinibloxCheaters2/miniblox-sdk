@@ -215,6 +215,12 @@ export declare class EntityPlayer extends EntityLivingBase {
 	fixedUpdate(): void;
 	/** IMPORTANT: USE DUMPS */
 	updatePlayerMoveState(): void;
+	/** IMPORTANT: USE DUMPS */
+	isPlayer(): boolean;
+	/** IMPORTANT: USE DUMPS */
+	hasInferniumArmor(): boolean;
+	/** IMPORTANT: USE DUMPS */
+	destroyCurrentEquippedItem(): void;
 }
 
 export { EntityPlayer, IInterface };

@@ -84,6 +84,16 @@ export declare class EntityLivingBase extends Entity {
 	isSpearCharging(): boolean;
 	/** IMPORTANT: USE DUMPS */
 	pushOutOfBlocks(x: number, y: number, z: number): boolean;
+	/** IMPORTANT: USE DUMPS */
+	getCombatTracker(): CombatTracker;
+	/** IMPORTANT: USE DUMPS */
+	canDropLoot(): boolean;
+	/** IMPORTANT: USE DUMPS */
+	addRandomDrop(): void;
+	/** IMPORTANT: USE DUMPS */
+	getCreatureAttribute(): EnumCreatureAttribute;
+	/** IMPORTANT: USE DUMPS */
+	setLastAttacker(entity: Entity): void;
 }
 
 export { EntityLivingBase };

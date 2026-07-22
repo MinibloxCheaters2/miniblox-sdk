@@ -65,6 +65,10 @@ export declare class Entity {
 	getCustomNameTag(): string;
 	equals(other: unknown): boolean;
 	getEntityBoundingBox(): Box3;
+	/** IMPORTANT: USE DUMPS */
+	getCollisionBorderSize(): number;
+	/** IMPORTANT: USE DUMPS */
+	getEyePos(): Vector3;
 	setSize(width: number, height: number): void;
 	setPositionAndUpdate(x: number, y: number, z: number): void;
 	setPosition(vec: Vector3): void;
@@ -92,6 +96,8 @@ export declare class Entity {
 		yaw?: number,
 		pitch?: number,
 	): void;
+	/** IMPORTANT: USE DUMPS */
+	setRotation(yaw: number, pitch: number): void;
 	getEyeHeight(): number;
 	getPartialTicks(): number;
 	update(): void;
@@ -116,8 +122,20 @@ export declare class Entity {
 	isOnLadder(): boolean;
 	canTriggerWalking(): boolean;
 	moveEntity(dX: number, dY: number, dZ: number): void;
+	/** IMPORTANT: USE DUMPS */
+	moveFlying(strafe: number, forward: number, friction: number): void;
+	/** IMPORTANT: USE DUMPS */
+	setVelocity(x: number, y: number, z: number): void;
 	playSound(x: number, y: number, z: number): void;
 	addVelocity(x: number, y: number, z: number): void;
+	/** IMPORTANT: USE DUMPS */
+	isEating(): boolean;
+	/** IMPORTANT: USE DUMPS */
+	setEating(eating: boolean): void;
+	/** IMPORTANT: USE DUMPS */
+	setInvisible(invisible: boolean): void;
+	/** IMPORTANT: USE DUMPS */
+	getHorizontalFacing(): EnumFacing;
 	setFire(ticks: number): void;
 	canBeCollidedWith(): boolean;
 	onCollideWithPlayer(u: unknown): void;
@@ -152,4 +170,43 @@ export declare class Entity {
 	setFlag(flag: number, value: boolean): void;
 	/** IMPORTANT: USE DUMPS */
 	isInvisibleToPlayer(player: EntityPlayer): boolean;
+	/** IMPORTANT: USE DUMPS */
+	isInLava(): boolean;
+	/** IMPORTANT: USE DUMPS */
+	isEntityInsideOpaqueBlock(): boolean;
+	/** IMPORTANT: USE DUMPS */
+	hitByEntity(entity: Entity): boolean;
+	/** IMPORTANT: USE DUMPS */
+	resetHeight(): void;
+	/** IMPORTANT: USE DUMPS */
+	getLadderSpeed(): number;
+	/** IMPORTANT: USE DUMPS */
+	getMaxFallHeight(): number;
+	/** IMPORTANT: USE DUMPS */
+	setOnFireFromLava(): void;
+	/** IMPORTANT: USE DUMPS */
+	isOpenBlockSpace(pos: BlockPos): boolean;
+	/** IMPORTANT: USE DUMPS */
+	hitByEntity(entity: Entity): boolean;
+	/** IMPORTANT: USE DUMPS */
+	getExplosionResistance(
+		_unused1: unknown,
+		_unused2: unknown,
+		_unused3: unknown,
+		block: unknown,
+	): number;
+	/** IMPORTANT: USE DUMPS */
+	verifyExplosion(
+		explosion: unknown,
+		worldObj: World,
+		x: number,
+		y: number,
+		z: number,
+	): boolean;
+	/** IMPORTANT: USE DUMPS */
+	isImmuneToExplosions(): boolean;
+	/** IMPORTANT: USE DUMPS */
+	getDistance(x: number, y: number, z: number): number;
+	/** IMPORTANT: USE DUMPS */
+	canAttackWithItem(): boolean;
 }

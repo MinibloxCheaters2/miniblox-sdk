@@ -3,6 +3,7 @@ import type { Game } from "../game";
 import type { CPacketRespawn } from "../packets";
 import type { Profile } from "../undefined";
 import type { BlockPos } from "../world/blockpos";
+import type { Entity } from "../entities/Entity";
 import type { PlayerMovement } from "./PlayerMovement";
 
 export declare class ClientEntityPlayer extends PlayerMovement {
@@ -14,6 +15,10 @@ export declare class ClientEntityPlayer extends PlayerMovement {
 	openShop(): void;
 	/** IMPORTANT: USE DUMPS */
 	getMoveDirection(yaw: number): Vector3;
+	/** IMPORTANT: USE DUMPS */
+	resetPositionToBB(updateCamera?: boolean): void;
+	/** IMPORTANT: USE DUMPS */
+	onCriticalHit(entity: Entity): void;
 }
 
 export { ClientEntityPlayer };
