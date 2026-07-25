@@ -1,6 +1,6 @@
 {
 	"name": "@wq2/miniblox-sdk",
-	"version": "3.46.147-0.0.0",
+	"version": "3.46.147-0.0.1",
 	"description": "SDK for Miniblox (mostly typings), originally from Vape Rewrite & Spherical.",
 	"readme": "ReadME.md",
 	"repository": {
@@ -25,10 +25,10 @@
 	"types": "./dist/index.d.mts",
 	"type": "module",
 	"dependencies": {
-		"@types/three": "0.184.0"
+		"@types/three": "^0.184.1"
 	},
 	"devDependencies": {
 		"tsdown": "^0.22.12",
-		"typescript": "^6.0.3"
+		"typescript": "^7.0.2"
 	}
 }
