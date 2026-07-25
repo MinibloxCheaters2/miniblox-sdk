@@ -288,6 +288,22 @@ export declare class ClientWorld extends World {
 	/** another relic, but this time I can't find it in MCP-919? */
 	chunkRenderBlockUpdateListener: undefined;
 	chunkProvider: ChunkProviderClient;
+	/** weather */
+	raining: boolean;
+	thundering: boolean;
+	rainingStrength: number;
+	thunderingStrength: number;
+	prevRainingStrength: number;
+	prevThunderingStrength: number;
+	/** world flags */
+	globalFriendlyFire: boolean;
+	livingEntityCount: number;
+	spawnPoint: BlockPos;
+	frozen: boolean;
+	collisionTimeThisTick: number;
+	neighborNotifyDepth: number;
+	spawnedThisCycle: boolean;
+	spawnCreateTimeThisCycle: number;
 	constructor(game: Game, scene: GameScene, dimension: number);
 	get isClient(): boolean;
 	get isServer(): boolean;
@@ -336,4 +352,17 @@ export declare class ClientWorld extends World {
 	handleBlockUpdate(bpJSON: CPacketBlockUpdate): void;
 	getRenderDistanceChunks(): number;
 	clear(): void;
+	applyChunkLight(): void;
+	attachEntityMesh(entity: Entity): void;
+	blockUpdateLightRadius(pos: BlockPos): void;
+	consumeDestroyTombstone(): void;
+	consumeLocalDiscard(): void;
+	dropFromSpawnQueue(): void;
+	getEntityIncludingQueued(id: number): Entity | undefined;
+	getNeighbouringSkyBlockLight(pos: BlockPos): number;
+	getVoxelBrightness(pos: BlockPos): number;
+	isFallDamageEnabled(): boolean;
+	rememberLocalDiscard(pos: BlockPos): void;
+	spawnCustomParticle(...args: unknown[]): void;
+	tombstoneDestroyedId(): number;
 }

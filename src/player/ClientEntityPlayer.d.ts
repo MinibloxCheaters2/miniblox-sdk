@@ -1,9 +1,7 @@
 import type { Vector3 } from "three";
-import type { Game } from "../game";
+import type { Entity } from "../entities/Entity";
 import type { CPacketRespawn } from "../packets";
 import type { Profile } from "../undefined";
-import type { BlockPos } from "../world/blockpos";
-import type { Entity } from "../entities/Entity";
 import type { PlayerMovement } from "./PlayerMovement";
 
 export declare class ClientEntityPlayer extends PlayerMovement {

@@ -1,4 +1,3 @@
-import type { Vector3 } from "three";
 import type { Potion } from "../effects";
 import type { EnumCreatureAttribute } from "../enums";
 import type { ItemStack } from "../items";
@@ -10,7 +9,6 @@ import type {
 } from "../undefined";
 import type { World } from "../world";
 import type { Entity } from "./Entity";
-import type { EntityPlayer } from "./EntityPlayer";
 
 export declare class EntityLivingBase extends Entity {
 	activePotionsMap: Map<number, PotionEffect>;
@@ -80,8 +78,8 @@ export declare class EntityLivingBase extends Entity {
 	getEquippedChestStack(): ItemStack | null;
 	tickEquipmentAbility(): void;
 	getSoundInfo(): unknown;
-	isElytraFlying(): boolean;
-	isSpearCharging(): boolean;
+	/** IMPORTANT: USE DUMPS */
+	setAbsorptionAmount(amount: number): void;
 	/** IMPORTANT: USE DUMPS */
 	pushOutOfBlocks(x: number, y: number, z: number): boolean;
 	/** IMPORTANT: USE DUMPS */
@@ -94,6 +92,8 @@ export declare class EntityLivingBase extends Entity {
 	getCreatureAttribute(): EnumCreatureAttribute;
 	/** IMPORTANT: USE DUMPS */
 	setLastAttacker(entity: Entity): void;
+	/** IMPORTANT: USE DUMPS */
+	canEntityBeSeen(entity: Entity): boolean;
 }
 
 export { EntityLivingBase };

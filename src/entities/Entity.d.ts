@@ -1,11 +1,10 @@
 import type { Box3, Vector3 } from "three";
 import type { Block } from "../blocks/Block";
-import type { EnumFacing } from "../math/facing";
 import type { ItemStack } from "../items";
-import type { Inventory } from "../undefined";
+import type { EnumFacing } from "../math/facing";
 import type { RenderPlayer } from "../render";
-import type { DataWatcher, Profile } from "../undefined";
-import type { BlockState, World } from "../world";
+import type { DataWatcher, Inventory, Profile } from "../undefined";
+import type { World } from "../world";
 import type { BlockPos } from "../world/blockpos";
 import type { DamageSource } from "../world/damageSource";
 import type { EntityItem } from "./EntityItem";
@@ -174,8 +173,6 @@ export declare class Entity {
 	isInLava(): boolean;
 	/** IMPORTANT: USE DUMPS */
 	isEntityInsideOpaqueBlock(): boolean;
-	/** IMPORTANT: USE DUMPS */
-	hitByEntity(entity: Entity): boolean;
 	/** IMPORTANT: USE DUMPS */
 	resetHeight(): void;
 	/** IMPORTANT: USE DUMPS */

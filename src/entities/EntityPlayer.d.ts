@@ -1,9 +1,8 @@
 import type { Vector3 } from "three";
 import type { Block, BlockChest } from "../blocks";
 import type { Container, ContainerPlayer } from "../container";
-import type { Abilities, GameMode } from "../game/gamemode";
-import type { Team } from "../game/team";
 import type { Game } from "../game";
+import type { Abilities, GameMode } from "../game/gamemode";
 import type { InventoryPlayer } from "../inventory";
 import type { ItemStack } from "../items";
 import type { EnumFacing } from "../math/facing";
@@ -143,17 +142,9 @@ export declare class EntityPlayer extends EntityLivingBase {
 	/** IMPORTANT: USE DUMPS */
 	attack(e: EntityLivingBase): void;
 	addStat(h: unknown, p: unknown): void;
-	addMovementStat(h: unknown, p: unknown, g: unknown): void;
-	updateItemInUse(): void;
 	getExperiencePoints(_unused?: EntityPlayer): number;
-	addExperience(xp: number): void;
-	setExperience(h: unknown, p: unknown): void;
-	xpBarCap(): number;
-	removeExperienceLevel(h: unknown): void;
-	addExperienceLevel(h: unknown): void;
 	update(): void;
 	setCurrentItemOrArmor(h: unknown, p: unknown): void;
-	preparePlayerToSpawn(): void;
 	setGamemode(gameMode: GameMode): boolean;
 	displayGUIChest(chest: BlockChest): void;
 	displayGui(h: IInterface): void;
@@ -167,7 +158,6 @@ export declare class EntityPlayer extends EntityLivingBase {
 	setItemInUse(h: unknown, p: unknown): void;
 	onItemUseFinish(): void;
 	handleStatusUpdate(h: unknown): void;
-	setAbsorptionAmount(h: unknown): void;
 	sendMessage(h: unknown, p: unknown): void;
 	isPlayerSleeping(): boolean;
 	isSpectator(): boolean;
@@ -221,6 +211,22 @@ export declare class EntityPlayer extends EntityLivingBase {
 	hasInferniumArmor(): boolean;
 	/** IMPORTANT: USE DUMPS */
 	destroyCurrentEquippedItem(): void;
+	/** IMPORTANT: USE DUMPS */
+	addExperience(xp: number): void;
+	/** IMPORTANT: USE DUMPS */
+	setExperience(experience: number, experienceTotal: number): void;
+	/** IMPORTANT: USE DUMPS */
+	xpBarCap(): number;
+	/** IMPORTANT: USE DUMPS */
+	addExperienceLevel(levels: number): void;
+	/** IMPORTANT: USE DUMPS */
+	removeExperienceLevel(levels: number): void;
+	/** IMPORTANT: USE DUMPS */
+	updateItemInUse(): void;
+	/** IMPORTANT: USE DUMPS */
+	preparePlayerToSpawn(): void;
+	/** IMPORTANT: USE DUMPS */
+	addMovementStat(dx: number, dy: number, dz: number): void;
 }
 
-export { EntityPlayer, IInterface };
+export { EntityPlayer, type IInterface };

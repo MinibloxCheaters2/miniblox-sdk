@@ -1,6 +1,6 @@
+import type { Block } from "../blocks/Block";
 import type { EntityPlayer } from "../entities";
 import type { Item, ItemStack } from "../items";
-import type { Block } from "../blocks/Block";
 import { SPacketUpdateInventory } from "../packets";
 
 type Crafter = unknown;
