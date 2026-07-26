@@ -7,6 +7,7 @@ import type { SlotActionType } from "../slot";
 import type { BlockState, World } from "../world";
 import type { BlockPos } from "../world/blockpos";
 import type { RayTraceResult } from "../world/rayTraceResult";
+import type { EnumHand } from "../enums";
 
 export declare class PlayerControllerMP {
 	lastSentSlot: number;
@@ -54,6 +55,7 @@ export declare class PlayerController {
 		pos: Vector3 | BlockPos,
 		placeSide: EnumFacing,
 		hitVec: Vector3,
+		hand: EnumHand
 	): boolean;
 	/** IMPORTANT: USE DUMPS */
 	sendUseItem(plr: EntityLivingBase, world: World, item: ItemStack): boolean;
@@ -85,10 +87,10 @@ export declare class PlayerController {
 	dropItem(all?: boolean): void;
 	update(): void;
 	render(): void;
-	resolveUseHand(): number;
+	resolveUseHand(): EnumHand;
 	setHeldStack(stack: ItemStack): void;
 	swapOffhand(): void;
-	swingHand(): void;
+	swingHand(hand: EnumHand): void;
 	tryFireWeapon(): void;
 	tryOpenSpectateMenu(): void;
 	updateWeaponFeel(): void;

@@ -6,6 +6,7 @@ import type { Abilities, GameMode } from "../game/gamemode";
 import type { InventoryPlayer } from "../inventory";
 import type { ItemStack } from "../items";
 import type { EnumFacing } from "../math/facing";
+import type { EnumHand } from "../enums";
 import type { SPacketPlayerInput } from "../packets";
 import type {
 	FoodStats,
@@ -61,7 +62,7 @@ export declare class EntityPlayer extends EntityLivingBase {
 	namePrefix: string;
 	homes: unknown;
 	guideProgress: unknown;
-	itemInUseHand: number;
+	itemInUseHand: EnumHand;
 	itemInUseSlot: number;
 	pendingUseHand: number;
 	sentInputThisTick: boolean;
@@ -179,7 +180,7 @@ export declare class EntityPlayer extends EntityLivingBase {
 	getSoundInfo(): unknown;
 	getEquippedChestStack(): ItemStack | null;
 	getArmorStacks(): ItemStack[];
-	getUseHand(): number;
+	getUseHand(): EnumHand;
 	toggleCameraPerspective(): void;
 	beginDeathCamera(): void;
 	endDeathCamera(): void;

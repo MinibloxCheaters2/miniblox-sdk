@@ -5,6 +5,11 @@ export enum EnumDifficulty {
 	HARD = 3,
 }
 
+export enum EnumHand {
+	MAIN_HAND = 0,
+	OFF_HAND = 1,
+}
+
 export enum Equipment_Slot {
 	MAIN_HAND = 0,
 	OFF_HAND = 1,
