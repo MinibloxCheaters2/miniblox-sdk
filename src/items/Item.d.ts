@@ -2,6 +2,7 @@ import type { Vector3 } from "three";
 import type { Entity } from "../entities";
 import type { EnumFacing } from "../math/facing";
 import type { World } from "../world";
+import type { Block } from "../blocks";
 
 export class Item {
 	name: string;
