@@ -70,5 +70,5 @@ export declare class Controls {
     /**
      * **IMPORTANT: USE DUMPS**
      */
-    get cameraPos(): Vector3;
+    get position(): Vector3;
 }
