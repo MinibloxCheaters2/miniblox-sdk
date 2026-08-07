@@ -1,6 +1,6 @@
 import { Vector3, Vector3Like, Object3D, Camera } from "three";
 
-export declare class Lerp {
+export declare class Herp {
     t: number;
     from: Vector3;
     to: Vector3;
@@ -9,12 +9,12 @@ export declare class Lerp {
     get(v?: Vector3): Vector3;
 }
 
-export declare class Controls {
+export declare class PointerLockControls {
     rotation: {
         x: number;
         y: number;
     };
-    positionLerp: Lerp;
+    positionLerp: Herp;
     position: Vector3;
     pitchObject: Object3D;
     yawObject: Object3D;
