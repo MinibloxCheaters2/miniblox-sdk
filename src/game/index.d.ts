@@ -1,3 +1,4 @@
+export * from "./controls";
 export * from "./game";
 export * from "./gamemode";
 export * from "./gameScene";
