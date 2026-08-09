@@ -1,5 +1,6 @@
 import type { Group, Loader, Mesh, Texture, TextureLoader } from "three";
 import type { Block } from "../blocks/Block";
+import type { SkinManager } from "./skinManager";
 
 export interface AnimationKeyframe {
 	duration: number;
