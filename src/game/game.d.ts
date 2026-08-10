@@ -39,21 +39,14 @@ export interface GameInfo {
 
 export declare class ResourceMonitor {
 	instantFPS: number;
-	filteredFPS: number;
 	/** note: this is always 0 */
 	instantPing: number;
 	filteredPing: number;
-	static fpsGraphUpdate: unknown | null;
-	static memoryGraphUpdate: unknown | null;
-	static tickTimeGraphUpdate: unknown | null;
 	game: Game;
 	beginTime: number;
 	prevTime: number;
-	instantFPS: number;
 	filteredFPS: number;
 	filteredMaxFPS: number;
-	instantPing: number;
-	filteredPing: number;
 	filteredJitter: number;
 	lastPing: number;
 	monitorRefreshRate: number | null;

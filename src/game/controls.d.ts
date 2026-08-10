@@ -1,13 +1,5 @@
 import { Vector3, Vector3Like, Object3D, Camera } from "three";
-
-export declare class Herp {
-    t: number;
-    from: Vector3;
-    to: Vector3;
-    constructor();
-    set(v: Vector3Like): void;
-    get(v?: Vector3): Vector3;
-}
+import type { Herp } from "../utils/Herp";
 
 export declare class PointerLockControls {
     rotation: {

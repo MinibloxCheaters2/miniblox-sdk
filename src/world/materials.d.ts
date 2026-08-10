@@ -8,7 +8,8 @@ export class Material {
 	canBurn: boolean;
 	requiresNoTool: boolean;
 	mobilityFlag: MobilityFlag;
-	constructor(public materialMapColor: number);
+	materialMapColor: number;
+	constructor(materialMapColor: number);
 	isLiquid(): boolean;
 	isSolid(): boolean;
 	isSolidVisually(): boolean;

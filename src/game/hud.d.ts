@@ -1,4 +1,4 @@
-import type { Group, Loader, Mesh, Texture, TextureLoader } from "three";
+import type { Group, Loader, Mesh, Quaternion, Shape, Texture, TextureLoader, Vector3 } from "three";
 import type { Block } from "../blocks/Block";
 import type { SkinManager } from "./skinManager";
 
@@ -9,7 +9,7 @@ export interface AnimationKeyframe {
 }
 
 export declare class AnimationLerp {
-	private totalDuration;
+	private totalDuration: number;
 	private keyframes;
 	private target;
 	private cumulativeTimes;
@@ -58,11 +58,59 @@ export declare class Hud3D extends Group {
 	update(clientEntityPlayerInit?: boolean): void;
 }
 
+export interface FontData {
+	glyphs: { [k: string]: Glyph }
+	familyName: string
+	ascender: number
+	descender: number
+	underlinePosition: number
+	underlineThickness: number
+	boundingBox: BoundingBox
+	resolution: number
+	original_font_information: OriginalFontInformation
+	cssFontWeight: string
+	cssFontStyle: string
+}
+
+export interface Glyph {
+	ha: number
+	x_min: number
+	x_max: number
+	o: string
+}
+
+export interface BoundingBox {
+	yMin: number
+	xMin: number
+	yMax: number
+	xMax: number
+}
+
+export interface OriginalFontInformation {
+	format: number
+	copyright: string
+	fontFamily: string
+	fontSubfamily: string
+	uniqueID: string
+	fullName: string
+	version: string
+	postScriptName: string
+	manufacturer: string
+	designer: string
+	licence: string
+}
+
 export declare class Font {
 	isFont: true;
 	type: "Font";
-	constructor(public data: unknown);
-	generateShapes(u, h = 100): unknown[];
+	data: FontData;
+	constructor(data: FontData);
+	/**
+	 * @param text text to generate shapes for
+	 * @param size size of the text, default `100`
+	 * @param direction left->right or right->left, default `ltr`
+	 */
+	generateShapes(text: string, size?: number, direction?: "ltr" | "rtl"): Shape[];
 }
 
 export declare class FontLoader extends Loader<Font> {
@@ -73,28 +121,4 @@ export declare class FontLoader extends Loader<Font> {
 		onError: (err: unknown) => void,
 	): void;
 	parse(data): Font;
-}
-
-export declare class TextureManager {
-	loadTextures(): Promise<void>;
-	loadSpritesheet(): Promise<void>;
-	loader: TextureLoader;
-	fontLoader: FontLoader;
-	miniblox_font: Font;
-	old_miniblox_font: Font;
-	atlas;
-	materialWorld;
-	/** IMPORTANT: USE DUMPS */
-	materialTransparentWorld;
-	material;
-	materialEnchanted;
-	materialTransparent;
-	entityMaterials: object;
-	entityUVSize: object;
-	spritesheetPixels;
-	particles: object;
-	glintTexture: Texture;
-	skinManager: SkinManager;
-	/** **IMPORTANT**: USE DUMPS */
-	gltfManager: GLTFManager;
 }

@@ -10,6 +10,9 @@
 	"scripts": {
 		"build": "tsdown",
 		"dev": "tsdown -w",
+		"lint": "oxlint src",
+		"lint:fix": "oxlint src --fix",
+		"fmt": "oxfmt src",
 		"prepublishOnly": "bun run build"
 	},
 	"files": [
@@ -28,6 +31,8 @@
 		"@types/three": "^0.184.1"
 	},
 	"devDependencies": {
+		"oxfmt": "^0.62.0",
+		"oxlint": "^1.77.0",
 		"tsdown": "^0.22.12",
 		"typescript": "^7.0.2"
 	}
