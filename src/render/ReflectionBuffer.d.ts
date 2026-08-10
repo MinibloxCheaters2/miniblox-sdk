@@ -23,7 +23,7 @@ export interface ReflectionBufferUniforms {
   reflectionViewMatrixInverse: { value: Matrix4 };
   reflectionProjectionMatrixInverse: { value: Matrix4 };
   /** 0 or 1, used as a shader bool */
-  reflectionEnabled: { value: number };
+  reflectionEnabled: { value: 0 | 1 };
 }
 
 export declare class ReflectionBuffer {
