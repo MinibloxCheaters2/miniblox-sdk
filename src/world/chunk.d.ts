@@ -43,11 +43,7 @@ export declare class Chunk {
 		arr: Entity[],
 		idk: null,
 	): void;
-	getEntitiesOfTypeWithinAABB(
-		eType: string | null,
-		box: Box3,
-		arr: Entity[],
-	): void;
+	getEntitiesOfTypeWithinAABB(eType: string | null, box: Box3, arr: Entity[]): void;
 	isEmpty(): boolean;
 	getHeightMap(): number[];
 	setHeightMap(heightMap: number[]): void;

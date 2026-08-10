@@ -89,13 +89,7 @@ export declare class Model extends Group {
 	 * @param depth the depth of the box
 	 * @returns UV data and dimensions
 	 */
-	static addBox(
-		x: number,
-		y: number,
-		width: number,
-		height: number,
-		depth: number,
-	): BoxData;
+	static addBox(x: number, y: number, width: number, height: number, depth: number): BoxData;
 
 	static addBoxSpritesheet(
 		x: number,
@@ -127,12 +121,7 @@ export declare class Model extends Group {
 
 	static setGeometry(geometry: GeometryData, idk?: IThingy): BufferGeometry;
 
-	static getGeometryData(
-		h: Model,
-		p: Block,
-		g?: number,
-		y?: boolean,
-	): GeometryData;
+	static getGeometryData(h: Model, p: Block, g?: number, y?: boolean): GeometryData;
 
 	generateGeometry(
 		h: string,

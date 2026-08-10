@@ -91,12 +91,7 @@ export declare class EnumParticleTypes {
 	particleID: number;
 	shouldIgnoreRange: boolean;
 	argumentCount: number;
-	constructor(
-		name: string,
-		id: number,
-		ignoreRange: boolean,
-		argCount?: number,
-	);
+	constructor(name: string, id: number, ignoreRange: boolean, argCount?: number);
 	static getParticleNames(): (typeof EnumParticleTypes)["PARTICLE_NAMES"];
 	getParticleName(): this["particleName"];
 	getParticleID(): this["particleID"];
@@ -115,11 +110,7 @@ export declare class EffectRenderer {
 	constructor(scene: GameScene, isGuiPlayerRenderer?: boolean);
 	registerVanillaParticles(): void;
 	registerParticle(id: number, h: EntityFXFactory): void;
-	emitParticleAtEntity(
-		world: World,
-		entity: Entity,
-		particleType: EnumParticleTypes,
-	): void;
+	emitParticleAtEntity(world: World, entity: Entity, particleType: EnumParticleTypes): void;
 	spawnEffectParticle(
 		world: ClientWorld,
 		particle: EnumParticleTypes,

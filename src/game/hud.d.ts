@@ -1,4 +1,13 @@
-import type { Group, Loader, Mesh, Quaternion, Shape, Texture, TextureLoader, Vector3 } from "three";
+import type {
+	Group,
+	Loader,
+	Mesh,
+	Quaternion,
+	Shape,
+	Texture,
+	TextureLoader,
+	Vector3,
+} from "three";
 import type { Block } from "../blocks/Block";
 import type { SkinManager } from "./skinManager";
 
@@ -59,45 +68,45 @@ export declare class Hud3D extends Group {
 }
 
 export interface FontData {
-	glyphs: { [k: string]: Glyph }
-	familyName: string
-	ascender: number
-	descender: number
-	underlinePosition: number
-	underlineThickness: number
-	boundingBox: BoundingBox
-	resolution: number
-	original_font_information: OriginalFontInformation
-	cssFontWeight: string
-	cssFontStyle: string
+	glyphs: { [k: string]: Glyph };
+	familyName: string;
+	ascender: number;
+	descender: number;
+	underlinePosition: number;
+	underlineThickness: number;
+	boundingBox: BoundingBox;
+	resolution: number;
+	original_font_information: OriginalFontInformation;
+	cssFontWeight: string;
+	cssFontStyle: string;
 }
 
 export interface Glyph {
-	ha: number
-	x_min: number
-	x_max: number
-	o: string
+	ha: number;
+	x_min: number;
+	x_max: number;
+	o: string;
 }
 
 export interface BoundingBox {
-	yMin: number
-	xMin: number
-	yMax: number
-	xMax: number
+	yMin: number;
+	xMin: number;
+	yMax: number;
+	xMax: number;
 }
 
 export interface OriginalFontInformation {
-	format: number
-	copyright: string
-	fontFamily: string
-	fontSubfamily: string
-	uniqueID: string
-	fullName: string
-	version: string
-	postScriptName: string
-	manufacturer: string
-	designer: string
-	licence: string
+	format: number;
+	copyright: string;
+	fontFamily: string;
+	fontSubfamily: string;
+	uniqueID: string;
+	fullName: string;
+	version: string;
+	postScriptName: string;
+	manufacturer: string;
+	designer: string;
+	licence: string;
 }
 
 export declare class Font {

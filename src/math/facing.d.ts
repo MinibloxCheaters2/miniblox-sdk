@@ -56,9 +56,6 @@ export declare class EnumFacing {
 	toArray(): [number, number, number];
 	static fromAngle(angle: number): EnumFacing;
 	static fromJSON(json: string): EnumFacing;
-	static fromDirectionAndAxis(
-		axisDirection: AxisDirection,
-		axis: Axis,
-	): EnumFacing;
+	static fromDirectionAndAxis(axisDirection: AxisDirection, axis: Axis): EnumFacing;
 	toAngleRadians(): number;
 }

@@ -55,7 +55,7 @@ export declare class PlayerController {
 		pos: Vector3 | BlockPos,
 		placeSide: EnumFacing,
 		hitVec: Vector3,
-		hand: EnumHand
+		hand: EnumHand,
 	): boolean;
 	/** IMPORTANT: USE DUMPS */
 	sendUseItem(plr: EntityLivingBase, world: World, item: ItemStack): boolean;

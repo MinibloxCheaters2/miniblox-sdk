@@ -5,10 +5,7 @@ import type { RayTraceResult } from "../world/rayTraceResult";
 
 export declare function keyPressed(key: string): boolean;
 
-export declare function canCraftItem(
-	inventory: InventoryPlayer,
-	recipe: Recipe,
-): boolean;
+export declare function canCraftItem(inventory: InventoryPlayer, recipe: Recipe): boolean;
 
 export declare function craftItem(
 	inventory: InventoryPlayer,
@@ -95,20 +92,8 @@ export declare function rayTraceBlocks(
 ): RayTraceResult | null;
 
 // Block collision utilities
-export declare function calculateXOffset(
-	self: Box3,
-	other: Box3,
-	offset: number,
-): number;
+export declare function calculateXOffset(self: Box3, other: Box3, offset: number): number;
 
-export declare function calculateYOffset(
-	self: Box3,
-	other: Box3,
-	offset: number,
-): number;
+export declare function calculateYOffset(self: Box3, other: Box3, offset: number): number;
 
-export declare function calculateZOffset(
-	self: Box3,
-	other: Box3,
-	offset: number,
-): number;
+export declare function calculateZOffset(self: Box3, other: Box3, offset: number): number;

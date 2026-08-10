@@ -10,9 +10,7 @@ export declare class Team {
 	constructor(name: string, displayName?: string);
 	isEqual(other: Team): boolean;
 	getName(): this["name"];
-	getDisplayName(): this["displayName"] extends undefined
-		? this["name"]
-		: this["displayName"];
+	getDisplayName(): this["displayName"] extends undefined ? this["name"] : this["displayName"];
 	setDisplayName(displayName?: string): void;
 	setPrefix(prefix: string): void;
 	addMember(member: EntityPlayer): void;

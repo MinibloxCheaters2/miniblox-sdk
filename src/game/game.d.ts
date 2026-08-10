@@ -212,16 +212,9 @@ export declare class Game {
 		},
 	): Promise<void>;
 	tryPartyFollowFallback(): boolean;
-	connectToPartyGame(
-		id: string,
-		miniGameId: string,
-		miniGameConfig: object,
-	): void;
+	connectToPartyGame(id: string, miniGameId: string, miniGameConfig: object): void;
 	connectToPartyGame(id: string): void;
-	static isRequeueableQueue(queue: {
-		minigameId: string;
-		minigameConfig: object;
-	}): boolean;
+	static isRequeueableQueue(queue: { minigameId: string; minigameConfig: object }): boolean;
 	tryQueueRequeue(): void;
 	/**
 	 * Shows a status modal

@@ -59,12 +59,7 @@ export class Item {
 	): boolean;
 	onItemRightClick(stack: ItemStack, world: World, player: Entity): ItemStack;
 	onItemUseFinish(stack: ItemStack, world: World, player: Entity): ItemStack;
-	onPlayerStoppedUsing(
-		stack: ItemStack,
-		world: World,
-		player: Entity,
-		timeLeft: number,
-	): void;
+	onPlayerStoppedUsing(stack: ItemStack, world: World, player: Entity, timeLeft: number): void;
 	hitEntity(stack: ItemStack, target: Entity, attacker: Entity): boolean;
 	onBlockDestroyed(
 		stack: ItemStack,
@@ -73,11 +68,7 @@ export class Item {
 		pos: Vector3,
 		player: Entity,
 	): boolean;
-	itemInteractionForEntity(
-		stack: ItemStack,
-		player: Entity,
-		target: Entity,
-	): boolean;
+	itemInteractionForEntity(stack: ItemStack, player: Entity, target: Entity): boolean;
 	repairWith(other: Item): boolean;
 	setHasSubtypes(has: boolean): void;
 	setMaxDamage(damage: number): void;
@@ -243,12 +234,7 @@ export class ItemStack {
 	attemptDamageItem(amount: number, random: unknown): boolean;
 	damageItem(amount: number, entity: Entity): void;
 	hitEntity(target: Entity, player: Entity): void;
-	onBlockDestroyed(
-		world: World,
-		block: Block,
-		pos: unknown,
-		player: Entity,
-	): void;
+	onBlockDestroyed(world: World, block: Block, pos: unknown, player: Entity): void;
 	canHarvestBlock(block: Block): boolean;
 	interactWithEntity(player: Entity, target: Entity): boolean;
 	addEnchantment(enchantment: unknown): void;
@@ -285,12 +271,7 @@ export class ItemStack {
 		hitZ: number,
 	): boolean;
 	onItemUseFinish(stack: ItemStack, world: World, player: Entity): ItemStack;
-	onPlayerStoppedUsing(
-		stack: ItemStack,
-		world: World,
-		player: Entity,
-		timeLeft: number,
-	): void;
+	onPlayerStoppedUsing(stack: ItemStack, world: World, player: Entity, timeLeft: number): void;
 	useItemRightClick(world: World, player: Entity): ItemStack;
 	toJSON(): unknown;
 	toNBT(nbt: unknown): unknown;

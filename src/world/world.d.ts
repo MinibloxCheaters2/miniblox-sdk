@@ -75,26 +75,13 @@ export declare class World {
 	setAir(pos: BlockPos, h?: number): void;
 	setAirXYZ(x: number, y: number, z: number): void;
 	isAir(pos: BlockPos): boolean;
-	areaPassesCheck(
-		min: BlockPos,
-		max: BlockPos,
-		checkFn: (b: Block) => boolean,
-	): boolean;
+	areaPassesCheck(min: BlockPos, max: BlockPos, checkFn: (b: Block) => boolean): boolean;
 	setBlockState(pos: BlockPos, state: BlockState, p?: number): boolean;
 	setBlockRaw(pos: BlockPos, state: BlockState): void;
 	notifyBlockOfStateChange(pos: ChunkPos, idk: unknown): void;
 	notifyNeighborsOfStateChange(pos: ChunkPos, idk: unknown): void;
-	notifyNeighborsOfStateExcept(
-		u: ChunkPos,
-		idk: unknown,
-		facing: EnumFacing,
-	): void;
-	playSoundAtEntity(
-		entity: Entity,
-		name: string,
-		volume?: number,
-		pitch?: number,
-	): void;
+	notifyNeighborsOfStateExcept(u: ChunkPos, idk: unknown, facing: EnumFacing): void;
+	playSoundAtEntity(entity: Entity, name: string, volume?: number, pitch?: number): void;
 	playSoundAtPosition(
 		pos: BlockPos,
 		volume: number | undefined,
@@ -109,11 +96,7 @@ export declare class World {
 		pos: BlockPos,
 		plr: EntityPlayer,
 	): void;
-	playPlaceSoundAtPositionClientSidePredicted(
-		block: Block,
-		pos: Vector3,
-		plr: EntityPlayer,
-	): void;
+	playPlaceSoundAtPositionClientSidePredicted(block: Block, pos: Vector3, plr: EntityPlayer): void;
 	spawnEntityInWorld(e: Entity): boolean;
 	setEntityState(_a: unknown, _b: unknown): void;
 	getEntityTracker(): void;
@@ -126,12 +109,7 @@ export declare class World {
 	getConfigurationManager(): void;
 	resetUpdateEntityTick(): void;
 	getTopSolidOrLiquidBlock(pos: BlockPos): BlockPos;
-	canBlockBePlaced(
-		block: Block,
-		pos: BlockPos,
-		bl: boolean,
-		_unused: unknown,
-	): boolean;
+	canBlockBePlaced(block: Block, pos: BlockPos, bl: boolean, _unused: unknown): boolean;
 	checkNoEntityCollision(box: Box3, _unused: unknown): boolean;
 	emitToAllNearExcept(
 		_a: unknown,
@@ -154,11 +132,7 @@ export declare class World {
 	isFlammableWithin(box: Box3): boolean;
 	handleMaterialAcceleration(box: Box3, _a: unknown, e: Entity): boolean;
 	getEntitiesWithinAABBExcludingEntity(excludedID: number, box: Box3): Entity[];
-	getEntitiesInAABBexcluding(
-		excludedID: number | null,
-		box: Box3,
-		idk?: null,
-	): Entity[];
+	getEntitiesInAABBexcluding(excludedID: number | null, box: Box3, idk?: null): Entity[];
 	getDifficulty(): EnumDifficulty;
 	setDifficulty(difficulty: EnumDifficulty): void;
 	updatePlayerInventory(_a: unknown): void;
@@ -172,12 +146,7 @@ export declare class World {
 	removeTileEntity(pos: BlockPos): void;
 	markTileEntityForRemoval(tileEntity: TileEntity): void;
 	unloadEntities(entities: Entity[]): void;
-	addBlockEvent(
-		pos: BlockPos,
-		idk: unknown,
-		idk2: unknown,
-		idk3: unknown,
-	): void;
+	addBlockEvent(pos: BlockPos, idk: unknown, idk2: unknown, idk3: unknown): void;
 	reconcileBlock(_a: unknown, _b: unknown): void;
 	forceBlockUpdateTick(block: Block, pos: BlockPos): void;
 	getRenderDistanceChunks(): void;
@@ -193,11 +162,7 @@ export declare class World {
 	scheduleUpdate(_a: unknown, _b: unknown, _c: unknown): void;
 	updateBlockTick(_a: unknown, _b: unknown, _c: unknown, _d: unknown): void;
 	getEntitiesWithinAABB(eType: string | null, box: Box3, _?: unknown): Entity[];
-	findNearestEntityWithinAABB(
-		eType: string,
-		box: Box3,
-		from_: Entity,
-	): Entity | null;
+	findNearestEntityWithinAABB(eType: string, box: Box3, from_: Entity): Entity | null;
 	isBlockTickPending(_a: unknown, _b: unknown): boolean;
 	updateComparatorOutputLevel(pos: BlockPos, idk: unknown): void;
 	spawnParticle(
@@ -211,18 +176,8 @@ export declare class World {
 		...v: unknown[]
 	): void;
 	getClosestPlayerToEntity(entity: Entity, max: number): EntityPlayer | null;
-	getClosestPlayer(
-		x: number,
-		y: number,
-		z: number,
-		max: number,
-	): EntityPlayer | null;
-	isAnyPlayerWithinRangeAt(
-		x: number,
-		y: number,
-		z: number,
-		maxDist: number,
-	): boolean;
+	getClosestPlayer(x: number, y: number, z: number, max: number): EntityPlayer | null;
+	isAnyPlayerWithinRangeAt(x: number, y: number, z: number, maxDist: number): boolean;
 	getSpawnPoint(): BlockPos;
 	countEntities(creatureClass: unknown): number;
 	getChunkProvider(): ChunkProvider;
@@ -310,24 +265,9 @@ export declare class ClientWorld extends World {
 	addPlayer(plr: EntityPlayer): void;
 	addTileEntity(tile: TileEntity): void;
 	removeTileEntity(pos: BlockPos): void;
-	setBlockState(
-		pos: BlockPos,
-		state: BlockState,
-		flags?: number,
-		preRender?: boolean,
-	): boolean;
-	playSoundAtEntity(
-		entity: Entity,
-		name: string,
-		volume?: number,
-		pitch?: number,
-	): void;
-	playSoundAtPosition(
-		name: string,
-		pos: BlockPos,
-		volume?: number,
-		pitch?: number,
-	): void;
+	setBlockState(pos: BlockPos, state: BlockState, flags?: number, preRender?: boolean): boolean;
+	playSoundAtEntity(entity: Entity, name: string, volume?: number, pitch?: number): void;
+	playSoundAtPosition(name: string, pos: BlockPos, volume?: number, pitch?: number): void;
 	playSound(name: string, volume?: number, pitch?: number): void;
 	displayBarrierParticles(x: number, y: number, z: number): void;
 	spawnParticle(

@@ -14,12 +14,7 @@ export class Slot {
 	 * @param _xDisplayPos unused parameter left over from MCP code.
 	 * @param _yDisplayPos unused parameter left over from MCP code.
 	 */
-	constructor(
-		inventory: Containers,
-		index: number,
-		_xDisplayPos: number,
-		_yDisplayPos: number,
-	);
+	constructor(inventory: Containers, index: number, _xDisplayPos: number, _yDisplayPos: number);
 	/**
 	 * if p2 has more items than p1, onCrafting(item,countIncrease) is called
 	 */

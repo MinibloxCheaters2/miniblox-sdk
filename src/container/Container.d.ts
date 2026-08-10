@@ -41,11 +41,7 @@ export class Container {
 	static isValidDragMode(mode: number, player: EntityPlayer): boolean;
 	/** resets the drag state variables. sets {@linkcode Container.dragEvent dragEvent} to 0 and clears all items in {@linkcode Container.dragSlots dragSlots} */
 	resetDrag(): void;
-	static canAddItemToSlot(
-		slot: Slot,
-		other: Slot,
-		stackSizeMatters: boolean,
-	): boolean;
+	static canAddItemToSlot(slot: Slot, other: Slot, stackSizeMatters: boolean): boolean;
 	static computeStackSize(
 		slots: Set<Slot>,
 		dragMode: number,

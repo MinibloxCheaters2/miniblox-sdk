@@ -61,13 +61,7 @@ export declare class EntityArrow extends Entity {
 	setDamage(h: number): void;
 	getDamage(): number;
 	setKnockbackStrength(h: number): void;
-	setThrowableHeading(
-		mX: number,
-		mY: number,
-		mZ: number,
-		y: number,
-		x: number,
-	): void;
+	setThrowableHeading(mX: number, mY: number, mZ: number, y: number, x: number): void;
 	setIsCritical(h: boolean): void;
 	getIsCritical(): boolean;
 }

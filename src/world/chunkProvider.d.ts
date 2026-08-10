@@ -12,10 +12,7 @@ export interface IChunkProvider {
 	saveChunks(): Promise<void>;
 
 	/** returns null on client */
-	getPossibleCreatures(
-		creatureType: EnumCreatureType,
-		pos: BlockPos,
-	): SpawnListEntry[] | null;
+	getPossibleCreatures(creatureType: EnumCreatureType, pos: BlockPos): SpawnListEntry[] | null;
 
 	getLoadedChunkCount(): number;
 

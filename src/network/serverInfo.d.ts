@@ -1,8 +1,4 @@
-import type {
-	CPacketServerInfo,
-	CPacketServerMetadata,
-	PlayerPermissionEntry,
-} from "../packets";
+import type { CPacketServerInfo, CPacketServerMetadata, PlayerPermissionEntry } from "../packets";
 
 export class ServerInfo {
 	serverId: string;

@@ -1,12 +1,7 @@
 import type { Potion } from "../effects";
 import type { EnumCreatureAttribute } from "../enums";
 import type { ItemStack } from "../items";
-import type {
-	AttributeMap,
-	CombatTracker,
-	Inventory,
-	PotionEffect,
-} from "../undefined";
+import type { AttributeMap, CombatTracker, Inventory, PotionEffect } from "../undefined";
 import type { World } from "../world";
 import type { Entity } from "./Entity";
 
@@ -60,19 +55,9 @@ export declare class EntityLivingBase extends Entity {
 	setSprinting(sprinting: boolean): void;
 	attackEntityFrom(h: unknown, p: unknown): boolean;
 	setBeenAttacked(): void;
-	knockback(
-		_unused_1: unknown,
-		_unused_2: unknown,
-		xM: number,
-		yM: number,
-	): void;
+	knockback(_unused_1: unknown, _unused_2: unknown, xM: number, yM: number): void;
 	update(): void;
-	updateFallState(
-		y: number,
-		onGround: boolean,
-		block: unknown | null,
-		pos: unknown,
-	): void;
+	updateFallState(y: number, onGround: boolean, block: unknown | null, pos: unknown): void;
 	fall(distance: number, damageMultiplier: number): void;
 	getArmorStacks(): ItemStack[];
 	getEquippedChestStack(): ItemStack | null;

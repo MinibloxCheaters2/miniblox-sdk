@@ -72,13 +72,7 @@ export declare class Entity {
 	setPositionAndUpdate(x: number, y: number, z: number): void;
 	setPosition(vec: Vector3): void;
 	setPosition(x: number, y: number, z: number): void;
-	setPositionAndRotation(
-		x: number,
-		y: number,
-		z: number,
-		yaw: number,
-		pitch: number,
-	): void;
+	setPositionAndRotation(x: number, y: number, z: number, yaw: number, pitch: number): void;
 	setPositionAndRotation2(
 		x: number,
 		y: number,
@@ -88,13 +82,7 @@ export declare class Entity {
 		_: unknown,
 		S?: boolean,
 	): void;
-	setLocationAndAngles(
-		x: number,
-		y: number,
-		z: number,
-		yaw?: number,
-		pitch?: number,
-	): void;
+	setLocationAndAngles(x: number, y: number, z: number, yaw?: number, pitch?: number): void;
 	/** IMPORTANT: USE DUMPS */
 	setRotation(yaw: number, pitch: number): void;
 	getEyeHeight(): number;
@@ -111,12 +99,7 @@ export declare class Entity {
 	};
 	fromJSON(data: { id: number; pos: Vector3; onGround: boolean }): void;
 	fall(distance: number, damageMultiplier: number): void;
-	updateFallState(
-		y: number,
-		onGround: boolean,
-		block: Block | null,
-		pos: BlockPos,
-	): void;
+	updateFallState(y: number, onGround: boolean, block: Block | null, pos: BlockPos): void;
 	handleStatusUpdate(u: unknown): void;
 	isOnLadder(): boolean;
 	canTriggerWalking(): boolean;
@@ -193,13 +176,7 @@ export declare class Entity {
 		block: unknown,
 	): number;
 	/** IMPORTANT: USE DUMPS */
-	verifyExplosion(
-		explosion: unknown,
-		worldObj: World,
-		x: number,
-		y: number,
-		z: number,
-	): boolean;
+	verifyExplosion(explosion: unknown, worldObj: World, x: number, y: number, z: number): boolean;
 	/** IMPORTANT: USE DUMPS */
 	isImmuneToExplosions(): boolean;
 	/** IMPORTANT: USE DUMPS */

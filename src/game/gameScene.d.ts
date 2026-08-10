@@ -1,4 +1,22 @@
-import type { AxesHelper, Fog as TFog, Group, PerspectiveCamera, Scene, Vector3, Color, ShaderMaterial, Mesh, PlaneGeometry, Sprite, AmbientLight, DirectionalLight, Object3D, Points, BufferGeometry, PointsMaterial } from "three";
+import type {
+	AxesHelper,
+	Fog as TFog,
+	Group,
+	PerspectiveCamera,
+	Scene,
+	Vector3,
+	Color,
+	ShaderMaterial,
+	Mesh,
+	PlaneGeometry,
+	Sprite,
+	AmbientLight,
+	DirectionalLight,
+	Object3D,
+	Points,
+	BufferGeometry,
+	PointsMaterial,
+} from "three";
 import type { Game } from "./game";
 import type { Single } from "../utils/Single";
 import type { EffectRenderer } from "../effects";
@@ -11,58 +29,58 @@ export declare class Fog {
 }
 
 export declare class Sun {
-    readonly gameScene: GameScene;
-    sun: Sprite;
-    moon: Sprite;
-    daySpeed: number;
-    sunDist: number;
-    offset: Vector3;
-    ambi: AmbientLight;
-    sunlight: DirectionalLight;
-    moonlight: DirectionalLight;
-    shadowTarget: Object3D;
-    shadowCenter: Vector3;
-    shadowCenterReady: boolean;
-    shadowTexel: number;
-    ambiIntensity: Single;
-    sunIntensity: Single;
-    moonIntensity: Single;
-    constructor(gameScene: GameScene);
-    applyShadowQuality(): void;
-    update(): void;
+	readonly gameScene: GameScene;
+	sun: Sprite;
+	moon: Sprite;
+	daySpeed: number;
+	sunDist: number;
+	offset: Vector3;
+	ambi: AmbientLight;
+	sunlight: DirectionalLight;
+	moonlight: DirectionalLight;
+	shadowTarget: Object3D;
+	shadowCenter: Vector3;
+	shadowCenterReady: boolean;
+	shadowTexel: number;
+	ambiIntensity: Single;
+	sunIntensity: Single;
+	moonIntensity: Single;
+	constructor(gameScene: GameScene);
+	applyShadowQuality(): void;
+	update(): void;
 }
 
 export declare class Sky {
-    gameScene: GameScene;
-    sun: Sun;
-    color: Color;
-    atmosphere: Mesh<SphereGeometry, ShaderMaterial>;
-    uniforms: {
-        horizonColor: {
-            value: Color;
-        };
-        zenithColor: {
-            value: Color;
-        };
-        sunGlowColor: {
-            value: Color;
-        };
-        sunDirection: {
-            value: Vector3;
-        };
-        dayFactor: {
-            value: number;
-        };
-        horizonDip: {
-            value: number;
-        };
-    };
-    constructor(gameScene: GameScene, sun: Sun);
-    update(): void;
-    /**
-     * @param percentage `Math.abs(this.sun.offset.y) ** .3 / this.sun.sunDist ** .3`. clamped to 0..1
-     */
-    updateAtmosphere(percentage: number): void;
+	gameScene: GameScene;
+	sun: Sun;
+	color: Color;
+	atmosphere: Mesh<SphereGeometry, ShaderMaterial>;
+	uniforms: {
+		horizonColor: {
+			value: Color;
+		};
+		zenithColor: {
+			value: Color;
+		};
+		sunGlowColor: {
+			value: Color;
+		};
+		sunDirection: {
+			value: Vector3;
+		};
+		dayFactor: {
+			value: number;
+		};
+		horizonDip: {
+			value: number;
+		};
+	};
+	constructor(gameScene: GameScene, sun: Sun);
+	update(): void;
+	/**
+	 * @param percentage `Math.abs(this.sun.offset.y) ** .3 / this.sun.sunDist ** .3`. clamped to 0..1
+	 */
+	updateAtmosphere(percentage: number): void;
 }
 
 // ts was genuinely the easiest thing to make typings for.
@@ -88,11 +106,11 @@ export declare class Clouds {
 }
 
 export declare class Stars {
-    gameScene: GameScene;
-    sun: Sun;
-    stars: Points<BufferGeometry, PointsMaterial>;
-    constructor(gameScene: GameScene, sun: Sun);
-    update(): void;
+	gameScene: GameScene;
+	sun: Sun;
+	stars: Points<BufferGeometry, PointsMaterial>;
+	constructor(gameScene: GameScene, sun: Sun);
+	update(): void;
 }
 
 export class GameScene {

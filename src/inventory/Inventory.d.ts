@@ -63,9 +63,7 @@ export declare class InventoryPlayer {
 	consumeInventoryItem(stack: ItemStack, amount?: number): number;
 	getInventoryItemCount(item: Item): number;
 	removeStackFromSlot(i: number): ItemStack | null;
-	sectionFor(
-		idx: number,
-	): [this["main"] | this["armor"] | this["offHand"], number];
+	sectionFor(idx: number): [this["main"] | this["armor"] | this["offHand"], number];
 	setSlot(slot: number, stack: ItemStack): void;
 	getStackInSlot(slot: number): ItemStack | null;
 	/** IMPORTANT: USE DUMPS */

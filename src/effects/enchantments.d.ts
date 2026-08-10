@@ -36,31 +36,21 @@ export abstract class Enchantment {
 	 * 	If another enchantment is constructed with the same ID already, the constructor will throw an error.
 	 * 	This is erroneously called an effectID in the fields.
 	 */
-	constructor(
-		enchantmentId: number,
-		name: string,
-		weight: number,
-		type: EnumEnchantmentType,
-	);
+	constructor(enchantmentId: number, name: string, weight: number, type: EnumEnchantmentType);
 
 	static getEnchantmentById(id: number): Enchantment | null;
 	static getEnchantmentByLocation(
 		location,
 	): ReturnType<(typeof Enchantment)["locationEnchantments"]["get"]>;
 	/** gets all location enchantments. Yet another Searge fallback name exposing the fact that this is Minecraft ported to the browser! */
-	static func_181077_c(): ReturnType<
-		(typeof Enchantment)["locationEnchantments"]["keys"]
-	>;
+	static func_181077_c(): ReturnType<(typeof Enchantment)["locationEnchantments"]["keys"]>;
 	getWeight(): this["weight"];
 	getMinLevel(): number;
 	getMaxLevel(): number;
 	getMinEnchantability(level: number): number;
 	getMaxEnchantability(level: number): number;
 	calcModifierDamage(level: number, source: DamageSource): number;
-	calcDamageByCreature(
-		level: number,
-		creatureType: EnumCreatureAttribute,
-	): number;
+	calcDamageByCreature(level: number, creatureType: EnumCreatureAttribute): number;
 	canApplyTogether(other: Enchantment): boolean;
 	setName(name: string): this;
 	getName(): this["name"];
@@ -82,22 +72,11 @@ export abstract class Enchantment {
 
 export class EnchantmentProtection extends Enchantment {
 	protectionType: number;
-	static readonly protectionName = [
-		"all",
-		"fire",
-		"fall",
-		"explosion",
-		"projectile",
-	];
+	static readonly protectionName = ["all", "fire", "fall", "explosion", "projectile"];
 	static readonly baseEnchantability = [1, 10, 5, 5, 3];
 	static readonly levelEnchantability = [11, 8, 6, 8, 6];
 	static readonly thresholdEnchantability = [20, 12, 10, 12, 15];
-	constructor(
-		enchantmentId: number,
-		name: string,
-		weight: number,
-		protectionType: number,
-	);
+	constructor(enchantmentId: number, name: string, weight: number, protectionType: number);
 	getMinEnchantability(level: number): number;
 	getMaxEnchantability(level: number): number;
 	getMaxLevel(): number;
@@ -135,12 +114,7 @@ class EnchantmentKnockback extends Enchantment {
 	getMaxLevel(): number;
 }
 class EnchantmentLootBonus extends Enchantment {
-	constructor(
-		enchantmentId: number,
-		name: string,
-		weight: number,
-		type: EnumEnchantmentType,
-	);
+	constructor(enchantmentId: number, name: string, weight: number, type: EnumEnchantmentType);
 	getMinEnchantability(level: number): number;
 	getMaxEnchantability(level: number): number;
 	getMaxLevel(): number;
@@ -174,30 +148,10 @@ class EnchantmentArrowKnockback extends Enchantment {
 
 // biome-ignore lint/complexity/noStaticOnlyClass: This is how Miniblox does it...
 export class Enchantments {
-	static readonly protection = new EnchantmentProtection(
-		0,
-		"protection",
-		10,
-		0,
-	);
-	static readonly fireProtection = new EnchantmentProtection(
-		1,
-		"fire_protection",
-		5,
-		1,
-	);
-	static readonly featherFalling = new EnchantmentProtection(
-		2,
-		"feather_falling",
-		5,
-		2,
-	);
-	static readonly blastProtection = new EnchantmentProtection(
-		3,
-		"blast_protection",
-		2,
-		3,
-	);
+	static readonly protection = new EnchantmentProtection(0, "protection", 10, 0);
+	static readonly fireProtection = new EnchantmentProtection(1, "fire_protection", 5, 1);
+	static readonly featherFalling = new EnchantmentProtection(2, "feather_falling", 5, 2);
+	static readonly blastProtection = new EnchantmentProtection(3, "blast_protection", 2, 3);
 	static readonly projectileProtection = new EnchantmentProtection(
 		4,
 		"projectile_protection",
@@ -207,29 +161,14 @@ export class Enchantments {
 	static readonly thorns = new EnchantmentThorns(7, "thorns", 1);
 	static readonly sharpness = new EnchantmentDamage(16, "sharpness", 10, 0);
 	static readonly smite = new EnchantmentDamage(17, "smite", 5, 1);
-	static readonly baneOfArthropods = new EnchantmentDamage(
-		18,
-		"bane_of_arthropods",
-		5,
-		2,
-	);
+	static readonly baneOfArthropods = new EnchantmentDamage(18, "bane_of_arthropods", 5, 2);
 	static readonly knockback = new EnchantmentKnockback(19, "knockback", 5);
 	static readonly fireAspect = new EnchantmentFireAspect(20, "fire_aspect", 2);
-	static readonly looting = new EnchantmentLootBonus(
-		21,
-		"looting",
-		2,
-		EnumEnchantmentType.WEAPON,
-	);
+	static readonly looting = new EnchantmentLootBonus(21, "looting", 2, EnumEnchantmentType.WEAPON);
 	static readonly efficiency = new EnchantmentDigging(32, "efficiency", 10);
 	static readonly silkTouch = new EnchantmentUntouching(33, "silk_touch", 1);
 	static readonly unbreaking = new EnchantmentDurability(34, "unbreaking", 5);
-	static readonly fortune = new EnchantmentLootBonus(
-		35,
-		"fortune",
-		2,
-		EnumEnchantmentType.DIGGER,
-	);
+	static readonly fortune = new EnchantmentLootBonus(35, "fortune", 2, EnumEnchantmentType.DIGGER);
 	static readonly power = new EnchantmentArrowDamage(48, "power", 10);
 	static readonly punch = new EnchantmentArrowKnockback(49, "punch", 2);
 	static readonly flame = new EnchantmentArrowFire(50, "flame", 2);
@@ -263,19 +202,11 @@ class EnchantmentUntouching extends Enchantment {
 }
 class EnchantmentDamage extends Enchantment {
 	readonly damageType: number;
-	constructor(
-		enchantmentId: number,
-		name: string,
-		weight: number,
-		damageType: number,
-	);
+	constructor(enchantmentId: number, name: string, weight: number, damageType: number);
 	getMinEnchantability(n): number;
 	getMaxEnchantability(n: number): number;
 	getMaxLevel(): number;
-	calcDamageByCreature(
-		level: number,
-		creatureType: EnumCreatureAttribute,
-	): number;
+	calcDamageByCreature(level: number, creatureType: EnumCreatureAttribute): number;
 	getName(): string;
 	canApplyTogether(other: Enchantment): boolean;
 	canApply(on: ItemStack): boolean;
