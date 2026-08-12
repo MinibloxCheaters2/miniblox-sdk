@@ -1,5 +1,13 @@
 # Minblox SDK
 
+> [!WARNING]
+> this is a tiny bit outdated and iffy here and there, but a lot of it is still accurate.
+> if you find a method that doesn't exist at runtime, it's probably remapped by vector.
+> you need to use some dumps or something in order to get the real names of functions.
+> we're not going to use the unobfuscated name of every function for every new release
+> just because that's actually how it is at runtime.
+> just skid [my remap proxy](https://codeberg.org/Miniblox/VapeRewrite/src/branch/fix/unpatch/src/utils/helpers/remapProxy.ts) from Vape Rewrite and use that.
+
 Mostly typings but there's enums and stuff here and there (nowhere).
 
 ## License
