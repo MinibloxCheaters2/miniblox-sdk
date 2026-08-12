@@ -31,5 +31,5 @@
 		"strictNullChecks": true,
 		"strictFunctionTypes": true
 	},
-	"exclude": ["lol.ts"]
+	"exclude": ["lol.ts", "tsdown.config.ts"]
 }

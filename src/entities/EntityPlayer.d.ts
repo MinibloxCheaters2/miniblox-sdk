@@ -3,12 +3,15 @@ import type { Block, BlockChest } from "../blocks";
 import type { Container, ContainerPlayer } from "../container";
 import type { Game } from "../game";
 import type { Abilities, GameMode } from "../game/gamemode";
+import type { Team } from "../game/team";
 import type { InventoryPlayer } from "../inventory";
 import type { ItemStack } from "../items";
 import type { EnumFacing } from "../math/facing";
 import type { EnumHand } from "../enums";
 import type { SPacketPlayerInput } from "../packets";
 import type {
+	CommandBlockLogic,
+	EffectsManager,
 	FoodStats,
 	GameProfile,
 	InventoryEnderChest,
@@ -25,6 +28,7 @@ export declare interface IInterface {
 }
 
 export declare class EntityPlayer extends EntityLivingBase {
+	socketId: string | null;
 	mode: GameMode;
 	inventory: InventoryPlayer;
 	inventoryEnderChest: InventoryEnderChest;
@@ -35,9 +39,13 @@ export declare class EntityPlayer extends EntityLivingBase {
 	flySpeed: number;
 	speedInAir: number;
 	name: string;
+	operator: boolean;
+	effects: EffectsManager | null;
 	foodStats: FoodStats;
+	team: Team | undefined;
 	actualName: string;
 	experienceLevel: number;
+	lastXPSound: number;
 	experienceTotal: number;
 	experience: number;
 	xpSeed: number;
@@ -49,9 +57,15 @@ export declare class EntityPlayer extends EntityLivingBase {
 	identifier: number;
 	sleeping: boolean;
 	sleepTimer: number;
+	playerLocation: BlockPos | null;
 	spawnChunk: unknown;
 	spawnForced: boolean | undefined;
+	home: unknown | undefined;
 	profile: GameProfile;
+	kills: number;
+	deaths: number;
+	inventoryManager: unknown;
+	fireTick: number;
 	prevInventory: Inventory;
 	prevDefencePoints: number;
 	game: Game;
@@ -228,6 +242,33 @@ export declare class EntityPlayer extends EntityLivingBase {
 	preparePlayerToSpawn(): void;
 	/** IMPORTANT: USE DUMPS */
 	addMovementStat(dx: number, dy: number, dz: number): void;
+	getItemInUse(): ItemStack;
+	getItemInUseCount(): number;
+	getItemInUseDuration(): number;
+	stopUsingItem(): void;
+	clearItemInUse(): void;
+	getInventoryEnderChest(): InventoryEnderChest;
+	onCriticalHit(entity: EntityLivingBase): void;
+	getJumpMovementFactor(): number;
+	onPlayerUpdate(): void;
+	applyInput(input: SPacketPlayerInput, _unused?: boolean): void;
+	openEditCommandBlock(h: CommandBlockLogic): void;
+	dropItemForPlayer(h: unknown, p?: boolean): unknown;
+	getToolDigEfficiency(h: unknown): unknown;
+	canEat(h: unknown): boolean;
+	shouldHeal(): boolean;
+	isInBed(): boolean;
+	static getBedSpawnLocation(h: unknown, p: unknown, g: unknown): Promise<Vector3>;
+	updateItemUse(h: unknown, p: unknown): void;
+	isPlayerFullyAsleep(): boolean;
+	getSleepTimer(): number;
+	getBedLocation(): Vector3;
+	isSpawnForced(): boolean;
+	setSpawnPoint(h: unknown, p: unknown): void;
+	wakeUpPlayer(h: unknown, p: unknown, g: unknown): void;
+	trySleep(h: unknown): 0 | 4 | 3 | 2 | 5;
+	getCurrentEquippedItem(): ItemStack | null;
+	interactWith(h: unknown): boolean;
 }
 
 export { EntityPlayer, type IInterface };

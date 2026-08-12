@@ -41,7 +41,9 @@ export declare class InventoryPlayer {
 	offHand: [ItemStack | null];
 	itemStack: ItemStack | null;
 	inventoryChanged: boolean;
+	setInventorySlotContents: (slot: number, stack: ItemStack) => void;
 	get mainInventory(): this["main"];
+	get armorInventory(): this["armor"];
 	get offHandInventory(): this["offHand"];
 	constructor(player: EntityPlayer);
 	getField(id: number): number;

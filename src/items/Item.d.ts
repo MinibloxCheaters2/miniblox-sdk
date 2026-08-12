@@ -10,9 +10,12 @@ export class Item {
 	id: number;
 	maxStackSize: number;
 	maxDurability: number;
+	maxDamage: number;
 	hasSubtypes: boolean;
 	itemModifierUUID: string;
 
+	getUnlocalizedName(): string;
+	getItemStackDisplayName(stack: ItemStack): string;
 	getDisplayName(): string;
 	getTextureName(side?: unknown): string;
 	getItemStackLimit(): number;
@@ -81,6 +84,7 @@ export class Item {
 
 export class ItemBlock extends Item {
 	block: Block;
+	getBlock(): Block;
 	canPlaceBlockOnSide(
 		world: World,
 		pos: Vector3,
@@ -98,6 +102,17 @@ export class ItemBlock extends Item {
 		hitY: number,
 		hitZ: number,
 	): boolean;
+	placeBlockAt(
+		stack: ItemStack,
+		player: Entity,
+		world: World,
+		pos: Vector3,
+		side: EnumFacing,
+		hitX: number,
+		hitY: number,
+		hitZ: number,
+		metadata: number,
+	): boolean;
 }
 
 export class ItemTool extends Item {
@@ -105,6 +120,7 @@ export class ItemTool extends Item {
 	damageVsEntity: number;
 	toolMaterial: unknown;
 	effectiveBlocks: Set<Block>;
+	getToolMaterial(): string;
 	getStrVsBlock(stack: ItemStack, block: Block): number;
 }
 
@@ -126,7 +142,9 @@ export class ItemHoe extends Item {
 
 export class ItemSword extends Item {
 	attackDamage: number;
+	weaponMaterial: string;
 	material: unknown;
+	getAttackDamage(): number;
 }
 
 export class ItemSpear extends ItemSword {
@@ -143,12 +161,15 @@ export class ItemMace extends ItemSword {
 
 export class ItemBow extends Item {
 	static BOW_TEXTURES: string[];
+	maxItemUseDuration: number;
 }
 
 export class ItemFood extends Item {
 	healAmount: number;
 	saturationModifier: number;
 	itemUseDuration: number;
+	isWolfsFavoriteMeat: boolean;
+	alwaysEdible: boolean;
 
 	getHealAmount(stack: ItemStack): number;
 	getSaturationModifier(stack: ItemStack): number;
@@ -172,12 +193,16 @@ export class ItemSeedFood extends ItemFood {
 export class ItemArmor extends Item {
 	armorType: number;
 	renderIndex: number;
+	maxDamage: number;
 	material: unknown;
 	toughness: number;
 	/** IMPORTANT: USE DUMPS */
 	damageReduceAmount: number;
 
 	getArmorMaterial(): string;
+	getColor(stack: ItemStack): number;
+	removeColor(stack: ItemStack): void;
+	hasColor(stack: ItemStack): boolean;
 }
 
 export class ItemThrowable extends Item {

@@ -17,10 +17,13 @@ export declare class PlayerControllerMP {
 	/** just returns {@link PlayerControllerMP.isHittingBlock isHittingBlock} */
 	func_181040_m(): this["isHittingBlock"];
 	sendEnchantPacket(windowId: string, button: number): void;
+	leftClick(): void;
+	rightClick(): void;
 	sendRenamePacket(windowId: string, name: string): void;
 }
 
 export declare class PlayerController {
+	prevBlock?: Vector3;
 	key: {
 		leftClick: number;
 	};

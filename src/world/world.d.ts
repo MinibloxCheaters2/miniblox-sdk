@@ -1,10 +1,10 @@
-import type { Vector3 } from "three";
+import type { Box3, Vector3 } from "three";
 import type { Block } from "../blocks";
 import type { Entity, EntityPlayer } from "../entities";
 import type { EnumDifficulty } from "../enums";
 import type { Game } from "../game";
 import type { GameScene } from "../game/gameScene";
-import type { CPacketLeaderboard } from "../packets";
+import type { CPacketBlockUpdate, CPacketLeaderboard } from "../packets";
 import type { BlockPos } from "./blockpos";
 import type { Chunk } from "./chunk";
 import type { IChunkProvider } from "./chunkProvider";
@@ -23,12 +23,14 @@ export declare class World {
 	totalTime: number;
 	worldTime: number;
 	tick: number;
+	serverInterface: unknown;
 	loadedEntityList: Entity[];
 	unloadedEntityList: Map<number, Entity>;
 	loadedTileEntitiesMap: BlockPosMap;
 	tileEntitiesToBeRemoved: unknown[];
 	chunkProvider: IChunkProvider;
 	ambientTickCountdown: number;
+	scheduledUpdatesAreImmediate: boolean;
 	leaderboards: Map<string, CPacketLeaderboard>;
 	enchantmentHelper: EnchantmentHelper;
 	difficulty: EnumDifficulty;
@@ -151,6 +153,7 @@ export declare class World {
 	forceBlockUpdateTick(block: Block, pos: BlockPos): void;
 	getRenderDistanceChunks(): void;
 	setActivePlayerChunksAndCheckLight(): void;
+	static doesBlockHaveSolidTopSurface(world: World, pos: BlockPos): boolean;
 	isBlockNormalCube(pos: BlockPos, idk: boolean): boolean;
 	getLightBrightness(_a: unknown): 15 | -15;
 	isBlockIndirectlyGettingPowered(facing: EnumFacing): number;
@@ -288,6 +291,7 @@ export declare class ClientWorld extends World {
 	removeEntity(entity: Entity): void;
 	onEntityRemoved(entity: Entity): void;
 	removeEntityFromWorld(entity: Entity): Entity;
+	removeAllEntities(): void;
 	isBlockLoaded(bp: BlockPos): boolean;
 	handleBlockUpdate(bpJSON: CPacketBlockUpdate): void;
 	getRenderDistanceChunks(): number;
