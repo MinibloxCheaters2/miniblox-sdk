@@ -20,6 +20,7 @@ import type {
 import type { Game } from "./game";
 import type { Single } from "../utils/Single";
 import type { EffectRenderer } from "../effects";
+import type { Weather } from "./weather";
 
 export declare class Fog {
 	gameScene: GameScene;
