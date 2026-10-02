@@ -184,7 +184,7 @@ export declare class EntityPlayer extends EntityLivingBase {
 	swapHandItems(): void;
 	isElytraFlying(): boolean;
 	isSpearCharging(): boolean;
-	trySpearLunge(): void;
+	trySpearLunge(): boolean;
 	chargeAttackEntity(): void;
 	addLungeVelocity(): void;
 	checkTotemDeathProtection(): boolean;
